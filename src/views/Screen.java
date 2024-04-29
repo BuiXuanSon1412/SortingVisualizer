@@ -77,12 +77,12 @@ public class Screen extends JPanel {
         /* --- pauseButton --- */
         pauseButton = new JButton("Pause");
         pauseButton.setPreferredSize(new Dimension(135, (int)(0.7 * iOptionHeight)));
+        pauseButton.addActionListener(buttonHandler);
         optionPanel.add(pauseButton);
+
         this.add(optionPanel, BorderLayout.SOUTH);
-
-
-        
     }
+
     private class ButtonHandler implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             JButton button = (JButton) (e.getSource());
@@ -96,6 +96,12 @@ public class Screen extends JPanel {
                 
             } else if (button.getText().equals("Shell Sort")) {
                 visualizer.animateSorting(new ShellSort());
+            } else if (button.getText().equals("Pause")) {
+                visualizer.pauseSorting();
+                pauseButton.setText("Resume");
+            } else if (button.getText().equals("Resume")) {
+                visualizer.resumeSorting();
+                pauseButton.setText("Pause");
             }
         }
     }
