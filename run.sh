@@ -1,7 +1,7 @@
 #!/bin/bash
 # Delete class files
-find "target" -type f -name "*.class" -delete
+find "bin" -type f -name "*.class" -delete
 # Compile Java source files
-find src -name "*.java" -exec javac -d target {} +
+find src -name "*.java" -exec javac -d bin {} +
 # Execute the Java application
 java -cp target Main
