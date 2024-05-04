@@ -1,7 +1,7 @@
 @echo off
 REM Delete class files
-del /S /Q target\*.java
+del /S /Q bin\*.class
 REM Compile Java source files
-for /R src %%F in (*.java) do javac -d target "%%F"
+for /R src %%F in (*.java) do javac -d bin "%%F"
 REM Execute the Java application
 java -cp target Main
