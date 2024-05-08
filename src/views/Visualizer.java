@@ -115,4 +115,7 @@ public class Visualizer extends JPanel {
     public int getNumberOfBars() {
         return array.length;
     }
+    public int[] getArray() {
+        return array;
+    }
 }
