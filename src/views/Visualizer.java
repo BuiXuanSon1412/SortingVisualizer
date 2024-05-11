@@ -10,16 +10,21 @@ import utils.ArrayGenerator;
 import algorithms.SortAbstraction;
 
 public class Visualizer extends JPanel {
-    private final long delay = 5;
+    private final int VISUALIZER_WIDTH = 750;
+    private final int VISUALIZER_HEIGHT = 500;
+    private final Color VISUALIZER_BACKGROUND_COLOR = Color.BLACK;
+    
+    private final long DELAY = 1000 / 60;
     private int[] array;
     private Color[] colors;
-    
+
     private Thread thread;
+
     // Constructor
-    public Visualizer(int iWidth, int iHeight) {
+    public Visualizer() {
         // VisualizerPanel settings
-        this.setPreferredSize(new Dimension(iWidth, iHeight));
-        this.setBackground(Color.white);
+        this.setPreferredSize(new Dimension(VISUALIZER_WIDTH, VISUALIZER_HEIGHT));
+        this.setBackground(VISUALIZER_BACKGROUND_COLOR);
         this.setDoubleBuffered(true);
 
         // Auto-generate array
@@ -30,15 +35,16 @@ public class Visualizer extends JPanel {
 
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        int space = 5;
-        int iY = 475;
-        int tile = 4;
-        int padding = 50;
         if (array != null) {
+            int space = 4;
+            int tile = 3;
+            int baseY = this.getHeight() - (this.getHeight() - 100*tile)/2;
+            int paddingX = (this.getWidth() - array.length * space)/2;
+            
             for (int i = 0; i < array.length; i++) {
-                int iX = space * i + padding;
+                int iX = space * i + paddingX;
                 g.setColor(colors[i]);
-                g.fillRect(iX, iY - tile * array[i], tile, tile * array[i]);
+                g.fillRect(iX, baseY - tile * array[i], tile, tile * array[i]);
             }
         }
     }
@@ -46,10 +52,9 @@ public class Visualizer extends JPanel {
     public void animateSorting(SortAbstraction sortAbstraction) {
         thread = new Thread(new Runnable() {
             public void run() {
-                    sortAbstraction.sort(Visualizer.this);
-                }
+                sortAbstraction.sort(Visualizer.this);
             }
-        );
+        });
         thread.start();
     }
 
@@ -58,60 +63,87 @@ public class Visualizer extends JPanel {
         array = arrayGenerator.randomGenerate();
         resetColor();
         repaint();
+        validate();
     }
 
     public void pauseSorting() {
-        
+
     }
+
+    public void resumeSorting() {
+
+    }
+
     public void updateAnimation() {
         repaint();
         validate();
         try {
-            Thread.sleep(delay);
+            /*
+             * long delay = (long)(1000 / fps) - (System.currentTimeMillis() -
+             * startingTime);
+             * System.out.println(delay);
+             * if (delay < 0) delay = 0;
+             */
+            Thread.sleep(DELAY);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
+
     public void swap(int i, int j) {
+        // long startingTime = System.currentTimeMillis();
         int tmp = array[i];
         array[i] = array[j];
         array[j] = tmp;
         updateAnimation();
+        // startingTime = System.currentTimeMillis();
         resetColor(i);
         resetColor(j);
         updateAnimation();
     }
+
     public void compare(int i, int j) {
+        // long startingTime = System.currentTimeMillis();
         colors[i] = Color.RED;
         colors[j] = Color.RED;
         updateAnimation();
     }
+
     public int getValue(int i) {
         return array[i];
     }
+
     public void setSortedColor(int i) {
-        colors[i] = Color.BLUE;
-        updateAnimation();  
+        // long startingTime = System.currentTimeMillis();
+        colors[i] = Color.CYAN;
+        updateAnimation();
     }
+
     public void setMarkedColor(int i) {
-        colors[i] = Color.YELLOW;
+        // long startingTime = System.currentTimeMillis();
+        colors[i] = Color.BLUE;
         updateAnimation();
     }
+
     public void setIteratingColor(int i) {
-        colors[i] = Color.RED;
+        // long startingTime = System.currentTimeMillis();
+        colors[i] = Color.DARK_GRAY;
         updateAnimation();
     }
+
     public void resetColor() {
         colors = new Color[array.length];
         for (int i = 0; i < array.length; i++) {
-            colors[i] = Color.GRAY;
+            colors[i] = Color.WHITE;
         }
     }
+
     public void resetColor(int i) {
-        colors[i] = Color.GRAY;
-        repaint();
-        validate();
+        // long startingTime = System.currentTimeMillis();
+        colors[i] = Color.WHITE;
+        updateAnimation();
     }
+
     public int getNumberOfBars() {
         return array.length;
     }
