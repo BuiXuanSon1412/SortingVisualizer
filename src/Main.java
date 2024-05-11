@@ -16,8 +16,8 @@ public class Main {
             window.setResizable(false);
             window.setTitle("Sorting Visualizer");
 
-            Screen screenPanel = new Screen();
-            window.add(screenPanel);
+            Screen screen = new Screen();
+            window.add(screen);
             window.pack();
 
             window.setLocationRelativeTo(null);
@@ -33,7 +33,6 @@ public class Main {
                     }
                 }
             });
-            
         });
     }
 }
