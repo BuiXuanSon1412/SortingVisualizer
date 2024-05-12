@@ -46,13 +46,11 @@ public class Visualizer extends JPanel {
     public void animateSorting(SortAbstraction sortAbstraction) {
         thread = new Thread(new Runnable() {
             public void run() {
-                    sortAbstraction.sort(Visualizer.this);
-                }
+                sortAbstraction.sort(Visualizer.this);
             }
-        );
+        });
         thread.start();
     }
-
     public void generateRandomArray() {
         ArrayGenerator arrayGenerator = new ArrayGenerator();
         array = arrayGenerator.randomGenerate();
@@ -61,7 +59,20 @@ public class Visualizer extends JPanel {
     }
 
     public void pauseSorting() {
-        
+        /* 
+        if (thread.isAlive()) {
+            thread.suspend();
+        }
+        */
+    }
+
+    public void resumeSorting() {
+        /*
+        Thread.State threadState = thread.getState();
+        if (threadState == Thread.State.WAITING || threadState == Thread.State.TIMED_WAITING) {
+            thread.resume();
+        }
+        */
     }
     public void updateAnimation() {
         repaint();
