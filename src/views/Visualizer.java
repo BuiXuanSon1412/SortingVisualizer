@@ -2,7 +2,6 @@ package views;
 
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
-import java.nio.Buffer;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -17,7 +16,7 @@ public class Visualizer extends Canvas {
     private final int SPACE = 4;
     private final Color VISUALIZER_BACKGROUND_COLOR = Color.BLACK;
 
-    private final long DELAY = 1000 / 800;
+    private final long DELAY = 1000 / 1000;
     private int[] array;
 
     private BufferStrategy bs;
@@ -58,7 +57,6 @@ public class Visualizer extends Canvas {
     public void animateSorting(SortAbstraction sortAbstraction) {
         thread = new Thread(new Runnable() {
             public void run() {
-                g = bs.getDrawGraphics();
                 sortAbstraction.sort(Visualizer.this);
             }
         });

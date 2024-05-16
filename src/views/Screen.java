@@ -1,13 +1,10 @@
 package views;
 
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import javax.swing.border.EmptyBorder;
 
 import algorithms.MergeSort;
 import algorithms.SelectionSort;
 import algorithms.ShellSort;
-import java.awt.Font;
 
 import javax.swing.JButton;
 
