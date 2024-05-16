@@ -1,22 +1,27 @@
 package views;
 
-import javax.swing.JPanel;
-
 import java.awt.Graphics;
+import java.awt.image.BufferStrategy;
+import java.nio.Buffer;
+import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
 
 import utils.ArrayGenerator;
 import algorithms.SortAbstraction;
 
-public class Visualizer extends JPanel {
+public class Visualizer extends Canvas {
     private final int VISUALIZER_WIDTH = 750;
     private final int VISUALIZER_HEIGHT = 500;
+    private final int TILE = 3;
+    private final int SPACE = 4;
     private final Color VISUALIZER_BACKGROUND_COLOR = Color.BLACK;
-    
-    private final long DELAY = 1000 / 60;
+
+    private final long DELAY = 1000 / 800;
     private int[] array;
-    private Color[] colors;
+
+    private BufferStrategy bs;
+    private Graphics g;
 
     private Thread thread;
 
@@ -25,33 +30,35 @@ public class Visualizer extends JPanel {
         // VisualizerPanel settings
         this.setPreferredSize(new Dimension(VISUALIZER_WIDTH, VISUALIZER_HEIGHT));
         this.setBackground(VISUALIZER_BACKGROUND_COLOR);
-        this.setDoubleBuffered(true);
-
-        // Auto-generate array
-        ArrayGenerator arrayGenerator = new ArrayGenerator();
-        array = arrayGenerator.randomGenerate();
-        resetColor();
     }
 
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        if (array != null) {
-            int space = 4;
-            int tile = 3;
-            int baseY = this.getHeight() - (this.getHeight() - 100*tile)/2;
-            int paddingX = (this.getWidth() - array.length * space)/2;
-            
-            for (int i = 0; i < array.length; i++) {
-                int iX = space * i + paddingX;
-                g.setColor(colors[i]);
-                g.fillRect(iX, baseY - tile * array[i], tile, tile * array[i]);
-            }
+    public void addNotify() {
+        super.addNotify();
+        createBufferStrategy(2); // Specify the number of buffers
+        bs = getBufferStrategy();
+    }
+
+    public void paint(Graphics g) {
+        super.paint(g);
+
+        ArrayGenerator arrayGenerator = new ArrayGenerator();
+        array = arrayGenerator.randomGenerate();
+
+        g.setColor(Color.WHITE);
+
+        int baseY = this.getHeight() - (this.getHeight() - array.length * TILE) / 2;
+        int paddingX = (this.getWidth() - array.length * SPACE) / 2;
+
+        for (int i = 0; i < array.length; i++) {
+            int iX = SPACE * i + paddingX;
+            g.fillRect(iX, baseY - TILE * array[i], TILE, TILE * array[i]);
         }
     }
 
     public void animateSorting(SortAbstraction sortAbstraction) {
         thread = new Thread(new Runnable() {
             public void run() {
+                g = bs.getDrawGraphics();
                 sortAbstraction.sort(Visualizer.this);
             }
         });
@@ -61,9 +68,9 @@ public class Visualizer extends JPanel {
     public void generateRandomArray() {
         ArrayGenerator arrayGenerator = new ArrayGenerator();
         array = arrayGenerator.randomGenerate();
-        resetColor();
-        repaint();
-        validate();
+
+        drawBase();
+        updateAnimation();
     }
 
     public void pauseSorting() {
@@ -75,15 +82,9 @@ public class Visualizer extends JPanel {
     }
 
     public void updateAnimation() {
-        repaint();
-        validate();
+        bs.show();
+        g.dispose();
         try {
-            /*
-             * long delay = (long)(1000 / fps) - (System.currentTimeMillis() -
-             * startingTime);
-             * System.out.println(delay);
-             * if (delay < 0) delay = 0;
-             */
             Thread.sleep(DELAY);
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -91,60 +92,84 @@ public class Visualizer extends JPanel {
     }
 
     public void swap(int i, int j) {
-        // long startingTime = System.currentTimeMillis();
+        int paddingX = (this.getWidth() - array.length * SPACE) / 2;
+
+        int xi = paddingX + SPACE * i;
+        int xj = paddingX + SPACE * j;
+        int d = xi - xj;
+
+        while (xi - xj != -d) {
+            drawBase();
+            setColor(i, Color.DARK_GRAY);
+            setColor(j, Color.DARK_GRAY);
+            remove(i, xi++);
+            remove(j, xj--);
+            drawUnit(i, xi);
+            drawUnit(j, xj);
+            updateAnimation();
+        }
+        
         int tmp = array[i];
         array[i] = array[j];
         array[j] = tmp;
-        updateAnimation();
-        // startingTime = System.currentTimeMillis();
-        resetColor(i);
-        resetColor(j);
+        drawBase();
         updateAnimation();
     }
 
-    public void compare(int i, int j) {
-        // long startingTime = System.currentTimeMillis();
-        colors[i] = Color.RED;
-        colors[j] = Color.RED;
-        updateAnimation();
+    public void drawBase() {
+        g = bs.getDrawGraphics();
+        g.setColor(VISUALIZER_BACKGROUND_COLOR);
+        g.fillRect(0, 0, VISUALIZER_WIDTH, VISUALIZER_HEIGHT);
+
+        g.setColor(Color.WHITE);
+        int baseY = this.getHeight() - (this.getHeight() - array.length * TILE) / 2;
+        int paddingX = (this.getWidth() - array.length * SPACE) / 2;
+
+        for (int i = 0; i < array.length; i++) {
+            int iX = SPACE * i + paddingX;
+            g.fillRect(iX, baseY - TILE * array[i], TILE, TILE * array[i]);
+        }
     }
 
+    public void remove(int i, int xi) {
+        int baseY = this.getHeight() - (this.getHeight() - array.length * TILE) / 2;
+
+        g.setColor(VISUALIZER_BACKGROUND_COLOR);
+        g.fillRect(xi, baseY - TILE * array[i], TILE, TILE * array[i]);
+
+        int paddingX = (this.getWidth() - array.length * SPACE) / 2;
+        int ti = (xi - paddingX) / SPACE;
+
+        g.setColor(Color.WHITE);
+        g.fillRect(ti * SPACE + paddingX, baseY - TILE * array[ti], TILE, TILE * array[ti]);
+        if (ti + 1 < array.length) {
+            g.setColor(Color.WHITE);
+            g.fillRect((ti + 1) * SPACE + paddingX, baseY - TILE * array[ti + 1], TILE, TILE * array[ti + 1]);
+        }
+    }
+
+    public void drawUnit(int i, int xi) {
+        int baseY = this.getHeight() - (this.getHeight() - array.length * TILE) / 2;
+        g.setColor(Color.BLUE);
+        g.fillRect(xi, baseY - TILE * array[i], TILE, TILE * array[i]);
+    }
+
+    public void setColor(int i, Color color) {
+        int baseY = this.getHeight() - (this.getHeight() - array.length * TILE) / 2;
+        int paddingX = (this.getWidth() - array.length * SPACE) / 2;
+        g.setColor(color);
+        g.fillRect(paddingX + i * SPACE, baseY - TILE * array[i], TILE, TILE * array[i]);
+    }
+
+    public void moveFrom(int j, int i) {
+
+    }
     public int getValue(int i) {
         return array[i];
     }
 
-    public void setSortedColor(int i) {
-        // long startingTime = System.currentTimeMillis();
-        colors[i] = Color.CYAN;
-        updateAnimation();
-    }
-
-    public void setMarkedColor(int i) {
-        // long startingTime = System.currentTimeMillis();
-        colors[i] = Color.BLUE;
-        updateAnimation();
-    }
-
-    public void setIteratingColor(int i) {
-        // long startingTime = System.currentTimeMillis();
-        colors[i] = Color.DARK_GRAY;
-        updateAnimation();
-    }
-
-    public void resetColor() {
-        colors = new Color[array.length];
-        for (int i = 0; i < array.length; i++) {
-            colors[i] = Color.WHITE;
-        }
-    }
-
-    public void resetColor(int i) {
-        // long startingTime = System.currentTimeMillis();
-        colors[i] = Color.WHITE;
-        updateAnimation();
-    }
-
-    public int getNumberOfBars() {
+    public int getLength() {
         return array.length;
     }
+
 }
