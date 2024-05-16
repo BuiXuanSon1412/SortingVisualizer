@@ -1,10 +1,13 @@
 package views;
 
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.border.EmptyBorder;
 
 import algorithms.MergeSort;
 import algorithms.SelectionSort;
 import algorithms.ShellSort;
+import java.awt.Font;
 
 import javax.swing.JButton;
 
@@ -16,92 +19,91 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public class Screen extends JPanel {
-    private final int iScreenWidth = 768;
-    private final int iScreenHeight = 576;
-    private final float fScale = 0.95f;
+    private final int SCREEN_WIDTH = 750;
+    private final int SCREEN_HEIGHT = 530;
+    private String currentSorting;
+
     private Visualizer visualizer;
     private JPanel optionPanel;
-    private JButton generateRandomArrayButton;
-    private JButton selectionSortButton;
-    private JButton mergeSortButton;
-    private JButton shellSortButton;
-    private JButton pauseButton;
+    private JPanel helpPanel;
+
+    private JButton[] optionButton = new JButton[5];
+    private JButton helpButton;
     private ButtonHandler buttonHandler = new ButtonHandler();
 
     // Constructor to arrange components on screen: visualizer, button, ...
     public Screen() {
+        /* general settings */
         this.setDoubleBuffered(true);
+        this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
         this.setLayout(new BorderLayout());
-         
-        int iVisualizerHeight = (int)(fScale * iScreenHeight);
-        int iOptionHeight = iScreenHeight - iVisualizerHeight;
+        this.setBackground(Color.WHITE);
+        /* option panel */
+        int iOptionHeight = 30;
+        int iButtonWidth = 135;
+        int iButtonHeight = 20;
 
-        // VisualizerPanel
-        visualizer = new Visualizer(iScreenWidth, iVisualizerHeight);
-        this.add(visualizer, BorderLayout.NORTH);
-
-        // OptionPanel
         optionPanel = new JPanel();
-        optionPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
-        optionPanel.setPreferredSize(new Dimension(iScreenWidth, iOptionHeight));
-        optionPanel.setBackground(Color.LIGHT_GRAY);
+        optionPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        optionPanel.setPreferredSize(new Dimension(SCREEN_WIDTH, iOptionHeight));
+        optionPanel.setBackground(Color.WHITE);
         optionPanel.setDoubleBuffered(true);
 
-        /* --- generateRandomArrayButton --- */
-        generateRandomArrayButton = new JButton("Generate");
-        generateRandomArrayButton.setPreferredSize(new Dimension(135, (int)(0.7 * iOptionHeight)));
-        generateRandomArrayButton.addActionListener(buttonHandler);
-        optionPanel.add(generateRandomArrayButton);
-        
-        /* --- selecttionSortButton --- */
-        selectionSortButton = new JButton("Selection Sort");
-        selectionSortButton.setPreferredSize(new Dimension(135, (int)(0.7 * iOptionHeight)));
-        selectionSortButton.addActionListener(buttonHandler);
-        optionPanel.add(selectionSortButton);
-        
-        /* --- mergeSortButton --- */
-        mergeSortButton = new JButton("Merge Sort");
-        mergeSortButton.setPreferredSize(new Dimension(135, (int)(0.7 * iOptionHeight)));
-        mergeSortButton.addActionListener(buttonHandler);
-        optionPanel.add(mergeSortButton);
-        
-        /* --- shellSortButton --- */
-        shellSortButton = new JButton("Shell Sort");
-        shellSortButton.setPreferredSize(new Dimension(135, (int)(0.7 * iOptionHeight)));
-        shellSortButton.addActionListener(buttonHandler);
-        optionPanel.add(shellSortButton);
-        
-        /* --- exitButton --- */
-        //exitButton = new JButton("Exit");
-        
-        /* --- pauseButton --- */
-        pauseButton = new JButton("Pause");
-        pauseButton.setPreferredSize(new Dimension(135, (int)(0.7 * iOptionHeight)));
-        pauseButton.addActionListener(buttonHandler);
-        optionPanel.add(pauseButton);
+        String[] buttonLabels = { "Generate", "Selection Sort", "Merge Sort", "Shell Sort", "Pause", "Exit" };
+        for (int i = 0; i < 5; i++) {
+            JButton button = new JButton(buttonLabels[i]);
+            button.setPreferredSize(new Dimension(iButtonWidth, iButtonHeight));
+            button.setBackground(Color.WHITE);
+            button.addActionListener(buttonHandler);
+            optionButton[i] = button;
+            optionPanel.add(optionButton[i]);
+        }
+        helpButton = new JButton("Help");
+        helpButton.setBackground(Color.WHITE);
+        helpButton.setPreferredSize(new Dimension(40, iButtonHeight));
+        helpButton.addActionListener(buttonHandler);
+        optionPanel.add(helpButton);
 
         this.add(optionPanel, BorderLayout.SOUTH);
+
+        /* visualizer panel */
+        visualizer = new Visualizer();
+        this.add(visualizer, BorderLayout.WEST);
+    }
+
+    private void showManual() {
+        Help help = new Help(currentSorting);
+        visualizer.setPreferredSize(new Dimension(visualizer.getWidth() - 200, visualizer.getHeight()));
+        Screen.this.add(help, BorderLayout.EAST);
+        helpButton.setVisible(false);
+        Screen.this.revalidate();
+        Screen.this.repaint();
     }
 
     private class ButtonHandler implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             JButton button = (JButton) (e.getSource());
-            if (button == generateRandomArrayButton) {
+            if (button.getText().equals("Generate")) {
                 visualizer.generateRandomArray();
             } else if (button.getText().equals("Selection Sort")) {
                 visualizer.animateSorting(new SelectionSort());
-
+                currentSorting = "Selection Sort";
             } else if (button.getText().equals("Merge Sort")) {
                 visualizer.animateSorting(new MergeSort());
-                
+                currentSorting = "Merge Sort";
             } else if (button.getText().equals("Shell Sort")) {
                 visualizer.animateSorting(new ShellSort());
+                currentSorting = "Shell Sort";
             } else if (button.getText().equals("Pause")) {
                 visualizer.pauseSorting();
-                pauseButton.setText("Resume");
+                button.setText("Resume");
             } else if (button.getText().equals("Resume")) {
                 visualizer.resumeSorting();
-                pauseButton.setText("Pause");
+                button.setText("Pause");
+            } else if (button.getText().equals("Exit")) {
+
+            } else if (button.getText().equals("Help")) {
+                showManual();
             }
         }
     }
