@@ -2,7 +2,6 @@ package views;
 
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.filechooser.FileSystemView;
 
 import algorithms.MergeSort;
 import algorithms.SelectionSort;
@@ -10,7 +9,6 @@ import algorithms.ShellSort;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -31,6 +29,7 @@ public class Screen extends JPanel {
 
     private Visualizer visualizer;
     private JButton[] optionButton = new JButton[4];
+    private JTextField input;
     private EventHandler eventHandler = new EventHandler();
 
     // Constructor to arrange components on screen: visualizer, button, ...
@@ -41,20 +40,20 @@ public class Screen extends JPanel {
         this.setLayout(new BorderLayout());
         this.setBackground(Color.WHITE);
         /* option panel */
-        int iOptionHeight = 30;
-        int iButtonWidth = 135;
-        int iButtonHeight = 20;
+        int OPTION_HEIGHT = 30;
+        int BUTTON_WIDTH = 135;
+        int BUTTON_HEIGHT = 20;
 
         JPanel option = new JPanel();
         option.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 5));
-        option.setPreferredSize(new Dimension(SCREEN_WIDTH, iOptionHeight));
+        option.setPreferredSize(new Dimension(SCREEN_WIDTH, OPTION_HEIGHT));
         option.setBackground(Color.WHITE);
         option.setDoubleBuffered(true);
 
         String[] buttonLabels = { "Generate", "Selection Sort", "Merge Sort", "Shell Sort" };
         for (int i = 0; i < 4; i++) {
             JButton button = new JButton(buttonLabels[i]);
-            button.setPreferredSize(new Dimension(iButtonWidth, iButtonHeight));
+            button.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
             button.setBackground(Color.WHITE);
             button.addActionListener(eventHandler);
             optionButton[i] = button;
@@ -68,8 +67,8 @@ public class Screen extends JPanel {
 
         /* header panel */
         JPanel header = new JPanel();
-        header.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 5));
-        header.setPreferredSize(new Dimension(SCREEN_WIDTH, iOptionHeight));
+        header.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 5));
+        header.setPreferredSize(new Dimension(SCREEN_WIDTH, OPTION_HEIGHT));
         header.setBackground(Color.WHITE);
         header.setDoubleBuffered(true);
 
@@ -88,18 +87,18 @@ public class Screen extends JPanel {
         menuBar.add(menu);
         header.add(menuBar);
 
-        JTextField input = new JTextField();
-        input.setPreferredSize(new Dimension(3 * iButtonWidth, iButtonHeight+1));
+        input = new JTextField();
+        input.setPreferredSize(new Dimension(2 * BUTTON_WIDTH, BUTTON_HEIGHT + 1));
         header.add(input);
 
         JButton enterButton = new JButton("Enter");
-        enterButton.setPreferredSize(new Dimension((int) (iButtonWidth/1.4), iButtonHeight));
+        enterButton.setPreferredSize(new Dimension((int) (BUTTON_WIDTH/1.4), BUTTON_HEIGHT));
         enterButton.setBackground(Color.WHITE);
         enterButton.addActionListener(eventHandler);
         header.add(enterButton);
 
         JButton uploadButton = new JButton("Upload");
-        uploadButton.setPreferredSize(new Dimension((int) (iButtonWidth/1.4), iButtonHeight));
+        uploadButton.setPreferredSize(new Dimension((int) (BUTTON_WIDTH/1.4), BUTTON_HEIGHT));
         uploadButton.setBackground(Color.WHITE);
         uploadButton.addActionListener(eventHandler);
         header.add(uploadButton);
