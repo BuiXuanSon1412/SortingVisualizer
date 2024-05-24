@@ -10,8 +10,6 @@ import utils.ArrayGenerator;
 import algorithms.SortAbstraction;
 
 public class Visualizer extends Canvas {
-    private final int VISUALIZER_WIDTH = 750;
-    private final int VISUALIZER_HEIGHT = 500;
     private final int TILE = 3;
     private final int SPACE = 4;
     private final Color VISUALIZER_BACKGROUND_COLOR = Color.BLACK;
@@ -24,25 +22,21 @@ public class Visualizer extends Canvas {
 
     private Thread thread;
 
-    // Constructor
     public Visualizer() {
-        // VisualizerPanel settings
-        this.setPreferredSize(new Dimension(VISUALIZER_WIDTH, VISUALIZER_HEIGHT));
         this.setBackground(VISUALIZER_BACKGROUND_COLOR);
+        ArrayGenerator arrayGenerator = new ArrayGenerator();
+        array = arrayGenerator.randomGenerate();
+
     }
 
     public void addNotify() {
         super.addNotify();
-        createBufferStrategy(2); // Specify the number of buffers
+        createBufferStrategy(2);
         bs = getBufferStrategy();
     }
 
     public void paint(Graphics g) {
         super.paint(g);
-
-        ArrayGenerator arrayGenerator = new ArrayGenerator();
-        array = arrayGenerator.randomGenerate();
-
         g.setColor(Color.WHITE);
 
         int baseY = (this.getHeight() + array.length * TILE) / 2;
@@ -69,14 +63,6 @@ public class Visualizer extends Canvas {
 
         drawAll(Color.WHITE);
         updateAnimation();
-    }
-
-    public void pauseSorting() {
-
-    }
-
-    public void resumeSorting() {
-
     }
 
     public void updateAnimation() {
@@ -115,7 +101,7 @@ public class Visualizer extends Canvas {
     public void drawAll(Color color) {
         g = bs.getDrawGraphics();
         g.setColor(VISUALIZER_BACKGROUND_COLOR);
-        g.fillRect(0, 0, VISUALIZER_WIDTH, VISUALIZER_HEIGHT);
+        g.fillRect(0, 0, this.getWidth(), this.getHeight());
 
         g.setColor(color);
         int baseY = (this.getHeight() + array.length * TILE) / 2;
@@ -157,7 +143,6 @@ public class Visualizer extends Canvas {
     }
 
     public void moveFrom(int i, int j, int k, int left, int right, int[] temp, Color color) {
-        // calculate step
         int dx = (k - i) * SPACE;
         int dy = array.length * TILE / 2;
         double d = Math.sqrt((double) dx * dx + dy * dy);
@@ -173,10 +158,9 @@ public class Visualizer extends Canvas {
         int mid = (left + right) / 2;
 
         while (true) {
-            // Draw background
             g = bs.getDrawGraphics();
             g.setColor(VISUALIZER_BACKGROUND_COLOR);
-            g.fillRect(0, 0, VISUALIZER_WIDTH, VISUALIZER_HEIGHT);
+            g.fillRect(0, 0, this.getWidth(), this.getHeight());
              
             g.setColor(Color.DARK_GRAY);
              

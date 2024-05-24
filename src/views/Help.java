@@ -8,7 +8,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 
 public class Help extends JTextArea {
-    private final int HELP_WIDTH = 200;
+    private final int HELP_WIDTH = 201;
     private final int HELP_HEIGHT = 500;
 
     public Help(String currentSorting) {
