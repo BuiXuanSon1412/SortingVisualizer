@@ -64,7 +64,25 @@ public class Visualizer extends Canvas {
         drawAll(Color.WHITE);
         updateAnimation();
     }
-
+    public void generateInputArray(String seq) {
+        ArrayGenerator arrayGenerator = new ArrayGenerator();
+        array = arrayGenerator.inputGenerate(seq);
+        if (array == null) {
+            drawWarning("Syntax Error");
+        } else {
+            drawAll(Color.WHITE);
+            updateAnimation();
+        }
+    }
+    public void drawWarning(String error) {
+        g = bs.getDrawGraphics();
+        int width = (int) (0.2 * this.getWidth());
+        g.setColor(Color.WHITE);
+        g.fillRect(2 * width, 10, width, 20);
+        g.setColor(Color.RED);
+        g.drawString(error, width / 4 + 2 * width, 25);
+        updateAnimation();
+    }
     public void updateAnimation() {
         bs.show();
         g.dispose();
