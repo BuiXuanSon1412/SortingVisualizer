@@ -19,7 +19,10 @@ import java.awt.Dimension;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.awt.event.ActionEvent;
 
 public class Screen extends JPanel {
@@ -92,13 +95,13 @@ public class Screen extends JPanel {
         header.add(input);
 
         JButton enterButton = new JButton("Enter");
-        enterButton.setPreferredSize(new Dimension((int) (BUTTON_WIDTH/1.4), BUTTON_HEIGHT));
+        enterButton.setPreferredSize(new Dimension((int) (BUTTON_WIDTH / 1.4), BUTTON_HEIGHT));
         enterButton.setBackground(Color.WHITE);
         enterButton.addActionListener(eventHandler);
         header.add(enterButton);
 
         JButton uploadButton = new JButton("Upload");
-        uploadButton.setPreferredSize(new Dimension((int) (BUTTON_WIDTH/1.4), BUTTON_HEIGHT));
+        uploadButton.setPreferredSize(new Dimension((int) (BUTTON_WIDTH / 1.4), BUTTON_HEIGHT));
         uploadButton.setBackground(Color.WHITE);
         uploadButton.addActionListener(eventHandler);
         header.add(uploadButton);
@@ -145,6 +148,19 @@ public class Screen extends JPanel {
                     if (result == JFileChooser.APPROVE_OPTION) {
                         File file = fileChooser.getSelectedFile();
                         System.out.println(file.getAbsolutePath());
+                        try (FileReader fr = new FileReader(file);
+                                BufferedReader br = new BufferedReader(fr)) {
+                            String str = br.readLine();
+                            visualizer.generateInputArray(str);
+                        } catch (IOException ex) {
+                            System.out.println("Error reading file: " + ex.getMessage());
+                        }
+
+                    }
+                } else if (button.getText().equals("Enter")) {
+                    String seq = input.getText();
+                    if (seq != "" || seq != null) {
+                        visualizer.generateInputArray(seq);
                     }
                 }
             } else if (source instanceof JMenuItem) {

@@ -18,7 +18,7 @@ public class Help extends JTextArea {
         } else {
             setText("\n\n\n\n_________GUIDE_________\n\n  SORTING VISUALIZER           APPLICATION\n\n Including:\n   - Selection Sort\n   - Merge Sort\n   - Shell Sort\n\n Features:\n   - Array generation\t    (random/input)\n   - Sorting animation\t    with bars\n   - Control sorting\t    animation");
         }
-        setBackground(Color.LIGHT_GRAY);
+        setBackground(Color.WHITE);
         setPreferredSize(new Dimension(HELP_WIDTH, HELP_HEIGHT));
         setBorder(new EmptyBorder(2, 2, 2, 2));
         setFont(new Font("Serif", Font.PLAIN, 15));

@@ -4,7 +4,6 @@ import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.awt.Canvas;
 import java.awt.Color;
-import java.awt.Dimension;
 
 import utils.ArrayGenerator;
 import algorithms.SortAbstraction;
@@ -14,7 +13,7 @@ public class Visualizer extends Canvas {
     private final int SPACE = 4;
     private final Color VISUALIZER_BACKGROUND_COLOR = Color.BLACK;
 
-    private final long DELAY = 1000 / 1000;
+    private final long DELAY = 1000 / 300;
     private int[] array;
 
     private BufferStrategy bs;
@@ -100,12 +99,16 @@ public class Visualizer extends Canvas {
         int xj = paddingX + SPACE * j;
         int d = xi - xj;
 
-        while (xi - xj != -d) {
+        while (true) {
             drawAll(Color.WHITE);
             setColor(i, Color.DARK_GRAY);
             setColor(j, Color.DARK_GRAY);
-            drawUnit(i, ++xi, Color.BLUE);
-            drawUnit(j, --xj, Color.BLUE);
+            drawUnit(i, xi, Color.BLUE);
+            drawUnit(j, xj, Color.BLUE);
+            if (xi - xj == -d)
+                break;
+            ++xi;
+            --xj;
             updateAnimation();
         }
 
@@ -179,9 +182,9 @@ public class Visualizer extends Canvas {
             g = bs.getDrawGraphics();
             g.setColor(VISUALIZER_BACKGROUND_COLOR);
             g.fillRect(0, 0, this.getWidth(), this.getHeight());
-             
+
             g.setColor(Color.DARK_GRAY);
-             
+
             for (int h = 0; h < temp.length; h++) {
                 int iX = SPACE * h + paddingX;
                 g.fillRect(iX, baseY - TILE * temp[h] / 2, TILE, TILE * temp[h] / 2);

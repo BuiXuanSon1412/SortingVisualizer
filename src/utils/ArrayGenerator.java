@@ -14,8 +14,31 @@ public class ArrayGenerator {
         }
         return array;
     }
-    public int[] inputGenerate(char[] sequence) {
-        // transfer sequence argument to array 
-        return null;
+    public int[] inputGenerate(String seq) {
+        int num = 1;
+        for (int i = 0; i < seq.length(); i++) {
+            char c = seq.charAt(i);
+            if (c == ' ') {
+                ++num;
+            }
+            else if (c > '9' || c < '0') {
+                return null;
+            }
+        }
+        int[] array = new int[num];
+        int n = 0;
+        int j = 0;
+        for (int i = 0; i < seq.length(); i++) {
+            char c = seq.charAt(i);
+            if (c != ' ') {
+                n = 10 * n + (c - '0');
+            } else if (n != 0) {
+                array[j++] = n;
+                n = 0;
+            }
+        }
+        array[j] = n;
+        
+        return array;
     }
 }
