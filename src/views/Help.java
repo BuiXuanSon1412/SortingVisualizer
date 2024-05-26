@@ -12,9 +12,15 @@ public class Help extends JTextArea {
     private final int HELP_HEIGHT = 500;
 
     public Help(String currentSorting) {
-        if (currentSorting != null) {
+        if (currentSorting == "Selection Sort") {
             setText("\n_________GUIDE_________\n\n" + currentSorting
-                    + "\n\nCYAN: sorted element(s)\n\nBLUE: marked elements\n\nDARK_GRAY: iterating pointer");
+                    + "\n\nCYAN: iterating\n\nBLUE: swapping\n\nDARK_GRAY: hidden");
+        } else if (currentSorting == "Merge Sort") {
+            setText("\n_________GUIDE_________\n\n" + currentSorting
+                    + "\n\n\nBLUE: merge\n\nDARK_GRAY: hidden\n\nYELLOW: boundary\n\nRED: partition");
+        } else if (currentSorting == "Shell Sort") {
+            setText("\n_________GUIDE_________\n\n" + currentSorting
+                    + "\n\nBLUE: swapping\n\nDARK_GRAY: hidden");
         } else {
             setText("\n\n\n\n_________GUIDE_________\n\n  SORTING VISUALIZER           APPLICATION\n\n Including:\n   - Selection Sort\n   - Merge Sort\n   - Shell Sort\n\n Features:\n   - Array generation\t    (random/input)\n   - Sorting animation\t    with bars\n   - Control sorting\t    animation");
         }

@@ -17,7 +17,7 @@ public class Visualizer extends Canvas {
     private int SPACE;
     private int baseY, paddingX;
 
-    private final long DELAY = 1000 / 30;
+    private final long DELAY = 1000 / 120;
 
     private int[] array;
 
