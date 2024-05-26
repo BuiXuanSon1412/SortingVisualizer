@@ -1,44 +1,60 @@
 package utils;
+
 import java.util.Random;
 
 public class ArrayGenerator {
-    private final int iMinimum = 1;
-    private final int iMaximum = 100;
-    private final int iNum = 100;
-    
+    private final int MIN = 1;
+    private final int MAX = 100;
+    private final int MAX_LEN = 59;
+
     public int[] randomGenerate() {
-        int[] array = new int[iNum];
+        int[] array = new int[MAX_LEN];
         Random random = new Random();
         for (int i = 0; i < array.length; i++) {
-            array[i] = random.nextInt(iMaximum - iMinimum) + iMinimum;
+            array[i] = random.nextInt(MAX - MIN + 1) + MIN;
         }
         return array;
     }
+
     public int[] inputGenerate(String seq) {
         int num = 1;
         for (int i = 0; i < seq.length(); i++) {
             char c = seq.charAt(i);
             if (c == ' ') {
                 ++num;
+            } else if (c > '9' || c < '0') {
+                int[] err = {-1}; // Syntax error
+                return err;
             }
-            else if (c > '9' || c < '0') {
-                return null;
-            }
+        }
+        System.out.println(num);
+        if (num > MAX_LEN) {
+            int[] err = {-2}; // exceeding length
+            return err;
         }
         int[] array = new int[num];
         int n = 0;
-        int j = 0;
+        int idx = 0;
         for (int i = 0; i < seq.length(); i++) {
             char c = seq.charAt(i);
             if (c != ' ') {
                 n = 10 * n + (c - '0');
             } else if (n != 0) {
-                array[j++] = n;
+                if (n > MAX) {
+                    int[] err= {-3};
+                    return err;
+                }
+                array[idx++] = n;
                 n = 0;
             }
         }
-        array[j] = n;
-        
+        if (n != 0) {
+            if (n > MAX) {
+                int[] err= {-3};
+                return err;
+            }
+            array[idx] = n;
+        }
         return array;
     }
 }
