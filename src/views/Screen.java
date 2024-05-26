@@ -114,11 +114,12 @@ public class Screen extends JPanel {
         header.add(uploadButton);
 
         JTextField fps = new JTextField("150ms");
-        fps.setPreferredSize(new Dimension(50, BUTTON_HEIGHT + 1));
+        fps.setPreferredSize(new Dimension(55, BUTTON_HEIGHT + 1));
         fps.setBackground(Color.WHITE);
         fps.setEditable(false);
+        visualizer.setSpeed(150);
 
-        speed = new JSlider(JSlider.HORIZONTAL, 1, 600, 150);
+        speed = new JSlider(JSlider.HORIZONTAL, 1, 1000, 150);
         speed.setPreferredSize(new Dimension((int) (BUTTON_WIDTH / 1.4), BUTTON_HEIGHT));
         speed.setBackground(Color.WHITE);
         speed.addChangeListener(new ChangeListener() {
@@ -151,14 +152,18 @@ public class Screen extends JPanel {
         this.repaint();
     }
 
-    private void switchAll(boolean mode) {
+    public void switchAll(boolean mode) {
         for (int i = 0; i < 4; i++) {
             optionButton[i].setEnabled(mode);
         }
         enterButton.setEnabled(mode);
         uploadButton.setEnabled(mode);
     }
-
+    public void enableGenerate() {
+        optionButton[0].setEnabled(true);
+        enterButton.setEnabled(true);
+        uploadButton.setEnabled(true);
+    }
     private class EventHandler implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             Object source = e.getSource();
@@ -192,13 +197,15 @@ public class Screen extends JPanel {
                         } catch (IOException ex) {
                             System.out.println("Error reading file: " + ex.getMessage());
                         }
-
+                        switchAll(true);
                     }
+
                 } else if (button.getText().equals("Enter")) {
                     String seq = input.getText();
                     if (seq != "" || seq != null) {
                         visualizer.generateInputArray(seq);
                     }
+                    switchAll(true);
                 }
             } else if (source instanceof JMenuItem) {
                 JMenuItem item = (JMenuItem) source;

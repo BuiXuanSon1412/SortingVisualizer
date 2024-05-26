@@ -17,7 +17,7 @@ public class Visualizer extends Canvas {
     private int SPACE;
     private int baseY, paddingX;
 
-    private long DELAY = 1000 / 150;
+    private long DELAY;
 
     private int[] array;
 
@@ -79,6 +79,8 @@ public class Visualizer extends Canvas {
         thread = new Thread(new Runnable() {
             public void run() {
                 sortAbstraction.sort(Visualizer.this);
+                Screen screen = (Screen) Visualizer.this.getParent();
+                screen.enableGenerate();
             }
         });
         thread.start();
