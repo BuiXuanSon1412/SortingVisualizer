@@ -1,7 +1,10 @@
 package views;
 
 import javax.swing.JPanel;
+import javax.swing.JSlider;
 import javax.swing.JTextField;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import algorithms.MergeSort;
 import algorithms.SelectionSort;
@@ -33,8 +36,10 @@ public class Screen extends JPanel {
     private Visualizer visualizer;
     private Help help;
     private JButton[] optionButton = new JButton[4];
-    JButton enterButton, uploadButton;
+    private JButton enterButton, uploadButton;
     private JTextField input;
+    private JSlider speed;
+
     private EventHandler eventHandler = new EventHandler();
 
     // Constructor to arrange components on screen: visualizer, button, ...
@@ -72,7 +77,7 @@ public class Screen extends JPanel {
 
         /* header panel */
         JPanel header = new JPanel();
-        header.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 5));
+        header.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 5));
         header.setPreferredSize(new Dimension(SCREEN_WIDTH, OPTION_HEIGHT));
         header.setBackground(Color.WHITE);
         header.setDoubleBuffered(true);
@@ -93,7 +98,7 @@ public class Screen extends JPanel {
         header.add(menuBar);
 
         input = new JTextField();
-        input.setPreferredSize(new Dimension(2 * BUTTON_WIDTH, BUTTON_HEIGHT + 1));
+        input.setPreferredSize(new Dimension(3 * BUTTON_WIDTH / 2, BUTTON_HEIGHT + 1));
         header.add(input);
 
         enterButton = new JButton("Enter");
@@ -108,21 +113,44 @@ public class Screen extends JPanel {
         uploadButton.addActionListener(eventHandler);
         header.add(uploadButton);
 
+        JTextField fps = new JTextField("150ms");
+        fps.setPreferredSize(new Dimension(50, BUTTON_HEIGHT + 1));
+        fps.setBackground(Color.WHITE);
+        fps.setEditable(false);
+
+        speed = new JSlider(JSlider.HORIZONTAL, 1, 600, 150);
+        speed.setPreferredSize(new Dimension((int) (BUTTON_WIDTH / 1.4), BUTTON_HEIGHT));
+        speed.setBackground(Color.WHITE);
+        speed.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                int value = speed.getValue();
+                fps.setText(value + "ms");
+                visualizer.setSpeed(value);
+            }
+        });
+
+        header.add(speed);
+
+        header.add(fps);
+
         this.add(header, BorderLayout.NORTH);
     }
 
     private void showManual() {
         help = new Help(currentSorting);
-        visualizer.setPreferredSize(new Dimension(visualizer.getWidth() - 200, visualizer.getHeight()));
+        visualizer.setPreferredSize(new Dimension(visualizer.getWidth() - 201, visualizer.getHeight()));
         this.add(help, BorderLayout.EAST);
         this.revalidate();
         this.repaint();
     }
+
     private void hideManual() {
         this.remove(help);
         this.revalidate();
         this.repaint();
     }
+
     private void switchAll(boolean mode) {
         for (int i = 0; i < 4; i++) {
             optionButton[i].setEnabled(mode);
@@ -130,6 +158,7 @@ public class Screen extends JPanel {
         enterButton.setEnabled(mode);
         uploadButton.setEnabled(mode);
     }
+
     private class EventHandler implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             Object source = e.getSource();
@@ -178,7 +207,7 @@ public class Screen extends JPanel {
                     item.setText("Hide help");
                 } else if (item.getText().equals("Hide help")) {
                     hideManual();
-                    item.setText("Help"); 
+                    item.setText("Help");
                 } else if (item.getText().equals("Exit")) {
                     int result = JOptionPane.showConfirmDialog(Screen.this.getParent(),
                             "Are you sure you want to exit?", "Confirm Exit",

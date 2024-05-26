@@ -17,7 +17,7 @@ public class Visualizer extends Canvas {
     private int SPACE;
     private int baseY, paddingX;
 
-    private final long DELAY = 1000 / 120;
+    private long DELAY = 1000 / 150;
 
     private int[] array;
 
@@ -72,6 +72,9 @@ public class Visualizer extends Canvas {
         }
     }
 
+    public void setSpeed(int fps) {
+        DELAY = 1000/fps;
+    }
     public void animateSorting(SortAbstraction sortAbstraction) {
         thread = new Thread(new Runnable() {
             public void run() {
