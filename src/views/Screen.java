@@ -31,6 +31,7 @@ public class Screen extends JPanel {
     private String currentSorting;
 
     private Visualizer visualizer;
+    private Help help;
     private JButton[] optionButton = new JButton[4];
     JButton enterButton, uploadButton;
     private JTextField input;
@@ -111,13 +112,17 @@ public class Screen extends JPanel {
     }
 
     private void showManual() {
-        Help help = new Help(currentSorting);
+        help = new Help(currentSorting);
         visualizer.setPreferredSize(new Dimension(visualizer.getWidth() - 200, visualizer.getHeight()));
         this.add(help, BorderLayout.EAST);
         this.revalidate();
         this.repaint();
     }
-
+    private void hideManual() {
+        this.remove(help);
+        this.revalidate();
+        this.repaint();
+    }
     private void switchAll(boolean mode) {
         for (int i = 0; i < 4; i++) {
             optionButton[i].setEnabled(mode);
@@ -170,6 +175,10 @@ public class Screen extends JPanel {
                 JMenuItem item = (JMenuItem) source;
                 if (item.getText().equals("Help")) {
                     showManual();
+                    item.setText("Hide help");
+                } else if (item.getText().equals("Hide help")) {
+                    hideManual();
+                    item.setText("Help"); 
                 } else if (item.getText().equals("Exit")) {
                     int result = JOptionPane.showConfirmDialog(Screen.this.getParent(),
                             "Are you sure you want to exit?", "Confirm Exit",
