@@ -102,13 +102,15 @@ public class Visualizer extends Canvas {
     public void generateInputArray(String seq) {
         ArrayGenerator arrayGenerator = new ArrayGenerator();
         array = arrayGenerator.inputGenerate(seq);
-
-        if (array[0] == -1) {
-            drawWarning("Syntax Error");
+        System.out.println(seq == "");
+        if (array[0] == 0) {
+            drawWarning("Warning: Empty Array");
+        }else if (array[0] == -1) {
+            drawWarning("Warning: SyntaxError");
         } else if (array[0] == -2) {
-            drawWarning("Length<=100");
+            drawWarning("Warning: Length<=100");
         } else if (array[0] == -3) {
-            drawWarning("Maximum:100");
+            drawWarning("Warning: Maximum:100");
         } else {
             setBarSize();
 
@@ -123,11 +125,11 @@ public class Visualizer extends Canvas {
 
     public void drawWarning(String error) {
         g = bs.getDrawGraphics();
-        int width = (int) (0.2 * this.getWidth());
+        int width = this.getWidth() / 4;
         g.setColor(Color.WHITE);
-        g.fillRect(2 * width, 10, width, 20);
+        g.fillRect(3 * this.getWidth() / 8, 10, width, 20);
         g.setColor(Color.RED);
-        g.drawString(error, width / 4 + 2 * width, 25);
+        g.drawString(error, 3 * this.getWidth() / 8 + 30, 25);
         updateAnimation();
     }
 

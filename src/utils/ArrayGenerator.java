@@ -17,6 +17,18 @@ public class ArrayGenerator {
     }
 
     public int[] inputGenerate(String seq) {
+
+        boolean isEmpty = true;
+        for (int i = 0; i < seq.length(); i++) {
+            if (seq.charAt(i) != ' ') {
+                isEmpty = false;
+                break;
+            }
+        }
+        if (isEmpty) {
+            int[] err = {0};
+            return err;
+        }
         int num = 1;
         for (int i = 0; i < seq.length(); i++) {
             char c = seq.charAt(i);
@@ -27,7 +39,6 @@ public class ArrayGenerator {
                 return err;
             }
         }
-        System.out.println(num);
         if (num > MAX_LEN) {
             int[] err = {-2}; // exceeding length
             return err;
