@@ -32,6 +32,7 @@ public class Screen extends JPanel {
 
     private Visualizer visualizer;
     private JButton[] optionButton = new JButton[4];
+    JButton enterButton, uploadButton;
     private JTextField input;
     private EventHandler eventHandler = new EventHandler();
 
@@ -94,13 +95,13 @@ public class Screen extends JPanel {
         input.setPreferredSize(new Dimension(2 * BUTTON_WIDTH, BUTTON_HEIGHT + 1));
         header.add(input);
 
-        JButton enterButton = new JButton("Enter");
+        enterButton = new JButton("Enter");
         enterButton.setPreferredSize(new Dimension((int) (BUTTON_WIDTH / 1.4), BUTTON_HEIGHT));
         enterButton.setBackground(Color.WHITE);
         enterButton.addActionListener(eventHandler);
         header.add(enterButton);
 
-        JButton uploadButton = new JButton("Upload");
+        uploadButton = new JButton("Upload");
         uploadButton.setPreferredSize(new Dimension((int) (BUTTON_WIDTH / 1.4), BUTTON_HEIGHT));
         uploadButton.setBackground(Color.WHITE);
         uploadButton.addActionListener(eventHandler);
@@ -117,12 +118,13 @@ public class Screen extends JPanel {
         this.repaint();
     }
 
-    private void disableAll() {
+    private void switchAll(boolean mode) {
         for (int i = 0; i < 4; i++) {
-            optionButton[i].setEnabled(false);
+            optionButton[i].setEnabled(mode);
         }
+        enterButton.setEnabled(mode);
+        uploadButton.setEnabled(mode);
     }
-
     private class EventHandler implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             Object source = e.getSource();
@@ -130,17 +132,18 @@ public class Screen extends JPanel {
                 JButton button = (JButton) source;
                 if (button.getText().equals("Generate")) {
                     visualizer.generateRandomArray();
+                    switchAll(true);
                 } else if (button.getText().equals("Selection Sort")) {
+                    switchAll(false);
                     visualizer.animateSorting(new SelectionSort());
-                    disableAll();
                     currentSorting = "Selection Sort";
                 } else if (button.getText().equals("Merge Sort")) {
+                    switchAll(false);
                     visualizer.animateSorting(new MergeSort());
-                    disableAll();
                     currentSorting = "Merge Sort";
                 } else if (button.getText().equals("Shell Sort")) {
+                    switchAll(false);
                     visualizer.animateSorting(new ShellSort());
-                    disableAll();
                     currentSorting = "Shell Sort";
                 } else if (button.getText().equals("Upload")) {
                     JFileChooser fileChooser = new JFileChooser();

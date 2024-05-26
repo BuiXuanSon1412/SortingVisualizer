@@ -30,21 +30,5 @@ public class SelectionSort extends SortAbstraction {
                 visualizer.updateAnimation();
             }
         }
-        
-        
-        //visualizer.remove(50, 349);
-        //visualizer.updateAnimation();
-        //visualizer.setColor(0, Color.BLUE);
-        //visualizer.setColor(12, Color.CYAN);
-        //System.out.println(visualizer.getValue(1) + " - " + visualizer.getValue(15));
-        //visualizer.swap(1, 15);
-        //visualizer.drawBase();
-        //System.out.println(visualizer.getValue(1) + " - " + visualizer.getValue(15));
-        //visualizer.drawBase();
-        /*
-        for (int i = 0; i < num; i++) {
-            visualizer.setColor(i, Color.CYAN);
-            visualizer.setColor(i, Color.GRAY);
-        }*/
     }
 }

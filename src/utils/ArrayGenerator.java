@@ -5,7 +5,7 @@ import java.util.Random;
 public class ArrayGenerator {
     private final int MIN = 1;
     private final int MAX = 100;
-    private final int MAX_LEN = 59;
+    private final int MAX_LEN = 100;
 
     public int[] randomGenerate() {
         int[] array = new int[MAX_LEN];
