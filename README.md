@@ -1,9 +1,21 @@
-Application using:
-  java version "21.0.1" 2023-10-17 LTS
-  Java(TM) SE Runtime Environment (build 21.0.1+12-LTS-29)
-  Java HotSpot(TM) 64-Bit Server VM (build 21.0.1+12-LTS-29, mixed mode, sharing)
-Download links:
-  - Linux:
-        https://www.oracle.com/java/technologies/downloads/#jdk21-linux
-  - Windows:
-        https://www.oracle.com/java/technologies/downloads/#jdk21-windows
+APPLICATION: SORTING VISUALIZER for: SELECTION SORT, MERGE SORT, SHELL SORT. 
+
+
+BY GROUP 3: Bùi Xuân Sơn
+            Phạm Thành Nam
+            Vũ Đức Mạnh
+            Luân Quang Minh
+
+
+PRE-INSTALLATION:
+++ Programming language: Java
+++ Graphics libraries: javax.swing, java.awt
+
+
+RUN:
+++ Using 'Run Java'
+++ Using Terminal: 
+          +++ For Linux: run 'run.sh' script
+          +++ For Windows: run 'run.bat' script
+
+
