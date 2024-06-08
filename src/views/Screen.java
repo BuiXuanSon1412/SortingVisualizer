@@ -113,7 +113,7 @@ public class Screen extends JPanel {
         uploadButton.addActionListener(eventHandler);
         header.add(uploadButton);
 
-        JTextField fps = new JTextField("150ms");
+        JTextField fps = new JTextField("150fps");
         fps.setPreferredSize(new Dimension(55, BUTTON_HEIGHT + 1));
         fps.setBackground(Color.WHITE);
         fps.setEditable(false);
@@ -126,7 +126,7 @@ public class Screen extends JPanel {
             @Override
             public void stateChanged(ChangeEvent e) {
                 int value = speed.getValue();
-                fps.setText(value + "ms");
+                fps.setText(value + "fps");
                 visualizer.setSpeed(value);
             }
         });
@@ -150,6 +150,7 @@ public class Screen extends JPanel {
         this.remove(help);
         this.revalidate();
         this.repaint();
+        help = null;
     }
 
     public void switchAll(boolean mode) {
@@ -176,14 +177,26 @@ public class Screen extends JPanel {
                     switchAll(false);
                     visualizer.animateSorting(new SelectionSort());
                     currentSorting = "Selection Sort";
+                    if (help != null) {
+                        hideManual();
+                        showManual();
+                    }
                 } else if (button.getText().equals("Merge Sort")) {
                     switchAll(false);
                     visualizer.animateSorting(new MergeSort());
                     currentSorting = "Merge Sort";
+                    if (help != null) {
+                        hideManual();
+                        showManual();
+                    }
                 } else if (button.getText().equals("Shell Sort")) {
                     switchAll(false);
                     visualizer.animateSorting(new ShellSort());
                     currentSorting = "Shell Sort";
+                    if (help != null) {
+                        hideManual();
+                        showManual();
+                    }
                 } else if (button.getText().equals("Upload")) {
                     JFileChooser fileChooser = new JFileChooser();
                     int result = fileChooser.showOpenDialog(Screen.this.getParent());
