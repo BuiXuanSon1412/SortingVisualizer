@@ -24,7 +24,7 @@ public class SelectionSort extends SortAbstraction {
             }
             
             if (i != minIndex) {
-                visualizer.swap(i, minIndex);
+                visualizer.swap(i, minIndex, false);
             } else {
                 visualizer.drawAll(Color.WHITE);
                 visualizer.updateAnimation();

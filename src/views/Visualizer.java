@@ -129,7 +129,7 @@ public class Visualizer extends Canvas {
         g.setColor(Color.WHITE);
         g.fillRect(3 * this.getWidth() / 8, 10, width, 20);
         g.setColor(Color.RED);
-        g.drawString(error, 3 * this.getWidth() / 8 + 30, 25);
+        g.drawString(error, 3 * this.getWidth() / 8 + 22, 25);
         updateAnimation();
     }
 
@@ -143,7 +143,7 @@ public class Visualizer extends Canvas {
         }
     }
 
-    public void swap(int i, int j) {
+    public void swap(int i, int j, boolean boundary) {
 
         int xi = paddingX + SPACE * i;
         int xj = paddingX + SPACE * j;
@@ -151,6 +151,7 @@ public class Visualizer extends Canvas {
 
         while (true) {
             drawAll(Color.WHITE);
+            if (boundary) drawBoundary(i, j);
             setColor(i, Color.DARK_GRAY);
             setColor(j, Color.DARK_GRAY);
             drawUnit(i, xi, Color.BLUE);
@@ -216,10 +217,7 @@ public class Visualizer extends Canvas {
                 g.fillRect(iX, baseY - TILE_Y * temp[h], TILE_X, TILE_Y * temp[h]);
             }
             // draw boundary lines
-            g.setColor(Color.YELLOW);
-            g.drawLine(paddingX + left * SPACE - 1, baseY, paddingX + left * SPACE - 1, baseY - 2 * BOUND * TILE_Y);
-            g.drawLine(paddingX + right * SPACE + TILE_X, baseY, paddingX + right * SPACE + TILE_X,
-                    baseY - 2 * BOUND * TILE_Y);
+            drawBoundary(left, right);
             g.setColor(Color.RED);
             g.drawLine(paddingX + mid * SPACE + TILE_X, baseY, paddingX + mid * SPACE + TILE_X,
                     baseY - BOUND * TILE_Y);
@@ -249,6 +247,12 @@ public class Visualizer extends Canvas {
         array[k] = temp[i];
     }
 
+    public void drawBoundary(int left, int right) {
+        g.setColor(Color.YELLOW);
+        g.drawLine(paddingX + left * SPACE - 1, baseY, paddingX + left * SPACE - 1, baseY - 2 * BOUND * TILE_Y);
+        g.drawLine(paddingX + right * SPACE + TILE_X, baseY, paddingX + right * SPACE + TILE_X,
+                    baseY - 2 * BOUND * TILE_Y);
+    }
     public void drawSegment(int i, int j, int[] arr, Color color) {
         g.setColor(color);
 
