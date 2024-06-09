@@ -7,6 +7,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import algorithms.MergeSort;
+import algorithms.QuickSort;
 import algorithms.SelectionSort;
 import algorithms.ShellSort;
 
@@ -199,7 +200,7 @@ public class Screen extends JPanel {
                     }
                 } else if (button.getText().equals("Quick Sort")) {
                     switchAll(false);
-                    visualizer.animateSorting(null);
+                    visualizer.animateSorting(new QuickSort());
                     currentSorting = "Quick Sort";
                     if (help != null) {
                         hideManual();
