@@ -17,11 +17,11 @@ public class ShellSort extends SortAbstraction {
                 int temp = visualizer.getValue(i);
                 int j = i;
                 while (j >= gap && visualizer.getValue(j - gap) > temp) {
-                    visualizer.swap(j - gap, j, true);
+                    visualizer.swap(j - gap, j, true, null, -1);
                     j -= gap;
                 }
             }
-            gap = gap / 3 + 1;
+            gap = (gap - 1) / 3;
         }
     }
 }

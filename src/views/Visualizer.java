@@ -10,7 +10,7 @@ import algorithms.SortAbstraction;
 
 public class Visualizer extends Canvas {
     private final Color VISUALIZER_BACKGROUND_COLOR = Color.BLACK;
-    
+
     private final int BOUND = 101;
     private final int TILE_Y = 2;
     private int TILE_X;
@@ -73,8 +73,9 @@ public class Visualizer extends Canvas {
     }
 
     public void setSpeed(int fps) {
-        DELAY = 1000/fps;
+        DELAY = 1000 / fps;
     }
+
     public void animateSorting(SortAbstraction sortAbstraction) {
         thread = new Thread(new Runnable() {
             public void run() {
@@ -95,17 +96,16 @@ public class Visualizer extends Canvas {
         baseY = this.getHeight() / 2 + BOUND * TILE_Y;
         paddingX = (this.getWidth() - array.length * SPACE) / 2;
 
-        drawAll(Color.WHITE);
+        drawAll(array, Color.WHITE);
         updateAnimation();
     }
 
     public void generateInputArray(String seq) {
         ArrayGenerator arrayGenerator = new ArrayGenerator();
         array = arrayGenerator.inputGenerate(seq);
-        System.out.println(seq == "");
         if (array[0] == 0) {
             drawWarning("Warning: Empty Array");
-        }else if (array[0] == -1) {
+        } else if (array[0] == -1) {
             drawWarning("Warning: SyntaxError");
         } else if (array[0] == -2) {
             drawWarning("Warning: Length<=100");
@@ -117,7 +117,7 @@ public class Visualizer extends Canvas {
             baseY = this.getHeight() / 2 + BOUND * TILE_Y;
             paddingX = (this.getWidth() - array.length * SPACE) / 2;
 
-            drawAll(Color.WHITE);
+            drawAll(array, Color.WHITE);
             updateAnimation();
         }
 
@@ -143,15 +143,27 @@ public class Visualizer extends Canvas {
         }
     }
 
-    public void swap(int i, int j, boolean boundary) {
+    public void swap(int i, int j, boolean boundary, boolean[] sorted, int pivot) {
 
         int xi = paddingX + SPACE * i;
         int xj = paddingX + SPACE * j;
         int d = xi - xj;
 
         while (true) {
-            drawAll(Color.WHITE);
-            if (boundary) drawBoundary(i, j);
+            drawAll(array, Color.WHITE);
+            if (boundary)
+                drawBoundary(i, j);
+            if (sorted != null) {
+                g.setColor(Color.YELLOW);
+                g.fillRect(SPACE * pivot + paddingX, baseY - TILE_Y * array[pivot], TILE_X, TILE_Y * array[pivot]);
+                g.setColor(Color.CYAN);
+                for (int k = 0; k < array.length; k++) {
+                    if (sorted[k]) {
+                        int iX = SPACE * k + paddingX;
+                        g.fillRect(iX, baseY - TILE_Y * array[k], TILE_X, TILE_Y * array[k]);
+                    }
+                }
+            }
             setColor(i, Color.DARK_GRAY);
             setColor(j, Color.DARK_GRAY);
             drawUnit(i, xi, Color.BLUE);
@@ -166,11 +178,11 @@ public class Visualizer extends Canvas {
         int tmp = array[i];
         array[i] = array[j];
         array[j] = tmp;
-        drawAll(Color.WHITE);
+        drawAll(array, Color.WHITE);
         updateAnimation();
     }
 
-    public void drawAll(Color color) {
+    public void drawAll(int[] array, Color color) {
         g = bs.getDrawGraphics();
         g.setColor(VISUALIZER_BACKGROUND_COLOR);
         g.fillRect(0, 0, this.getWidth(), this.getHeight());
@@ -193,7 +205,7 @@ public class Visualizer extends Canvas {
         g.fillRect(paddingX + i * SPACE, baseY - TILE_Y * array[i], TILE_X, TILE_Y * array[i]);
     }
 
-    public void moveFrom(int i, int j, int k, int left, int right, int[] temp, Color color) {
+    public void moveFrom(int i, int j, int k, int left, int right, int[] temp) {
         int dx = (k - i) * SPACE;
         int dy = BOUND * TILE_Y;
         double d = Math.sqrt((double) dx * dx + dy * dy);
@@ -206,16 +218,7 @@ public class Visualizer extends Canvas {
         int mid = (left + right) / 2;
 
         while (true) {
-            g = bs.getDrawGraphics();
-            g.setColor(VISUALIZER_BACKGROUND_COLOR);
-            g.fillRect(0, 0, this.getWidth(), this.getHeight());
-
-            g.setColor(Color.DARK_GRAY);
-
-            for (int h = 0; h < temp.length; h++) {
-                int iX = SPACE * h + paddingX;
-                g.fillRect(iX, baseY - TILE_Y * temp[h], TILE_X, TILE_Y * temp[h]);
-            }
+            drawAll(temp, Color.DARK_GRAY);
             // draw boundary lines
             drawBoundary(left, right);
             g.setColor(Color.RED);
@@ -231,9 +234,9 @@ public class Visualizer extends Canvas {
                 drawSegment(left, j - 1, temp, Color.DARK_GRAY);
                 drawSegment((left + right) / 2 + 1, i - 1, temp, Color.DARK_GRAY);
             }
-            drawTempSegment(left, k - 1, color);
+            drawTempSegment(left, k - 1, Color.BLUE);
             // draw movement
-            g.setColor(color);
+            g.setColor(Color.BLUE);
             g.fillRect((int) (paddingX + i * SPACE + x), (int) (baseY - TILE_Y * temp[i] - y), TILE_X,
                     TILE_Y * temp[i]);
             updateAnimation();
@@ -251,8 +254,9 @@ public class Visualizer extends Canvas {
         g.setColor(Color.YELLOW);
         g.drawLine(paddingX + left * SPACE - 1, baseY, paddingX + left * SPACE - 1, baseY - 2 * BOUND * TILE_Y);
         g.drawLine(paddingX + right * SPACE + TILE_X, baseY, paddingX + right * SPACE + TILE_X,
-                    baseY - 2 * BOUND * TILE_Y);
+                baseY - 2 * BOUND * TILE_Y);
     }
+
     public void drawSegment(int i, int j, int[] arr, Color color) {
         g.setColor(color);
 

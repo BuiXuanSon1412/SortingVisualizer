@@ -9,7 +9,7 @@ public class MergeSort extends SortAbstraction {
     public void sort(Visualizer visualizer) {
         int[] array = visualizer.getArray();
         mergeSort(array, 0, array.length - 1, visualizer);
-        visualizer.drawAll(Color.WHITE);
+        visualizer.drawAll(visualizer.getArray(), Color.WHITE);
         visualizer.updateAnimation();
     }
 
@@ -33,22 +33,22 @@ public class MergeSort extends SortAbstraction {
 
         while (i <= mid && j <= right) {
             if (temp[i] <= temp[j]) {
-                visualizer.moveFrom(i, j, k, left, right, temp, Color.BLUE);
+                visualizer.moveFrom(i, j, k, left, right, temp);
                 i++;
 
             } else {
-                visualizer.moveFrom(j, i, k, left, right, temp, Color.BLUE);
+                visualizer.moveFrom(j, i, k, left, right, temp);
                 j++;
             }
             k++;
         }
         while (i <= mid) {
-            visualizer.moveFrom(i, j, k, left, right, temp, Color.BLUE);
+            visualizer.moveFrom(i, j, k, left, right, temp);
             k++;
             i++;
         }
         while (j <= right) {
-            visualizer.moveFrom(j, i, k, left, right, temp, Color.BLUE);
+            visualizer.moveFrom(j, i, k, left, right, temp);
             k++;
             j++;
         }

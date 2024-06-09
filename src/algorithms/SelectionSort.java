@@ -13,7 +13,7 @@ public class SelectionSort extends SortAbstraction {
         for (int i = 0; i < num; i++) {
             int minIndex = i;
             for (int j = i + 1; j < num; j++) {
-                visualizer.drawAll(Color.WHITE);
+                visualizer.drawAll(visualizer.getArray(), Color.WHITE);
                 visualizer.setColor(j, Color.CYAN);
                 visualizer.setColor(minIndex, Color.BLUE);
                 visualizer.setColor(i, Color.BLUE);
@@ -24,9 +24,9 @@ public class SelectionSort extends SortAbstraction {
             }
             
             if (i != minIndex) {
-                visualizer.swap(i, minIndex, false);
+                visualizer.swap(i, minIndex, false, null, -1);
             } else {
-                visualizer.drawAll(Color.WHITE);
+                visualizer.drawAll(visualizer.getArray(), Color.WHITE);
                 visualizer.updateAnimation();
             }
         }
