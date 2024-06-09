@@ -35,7 +35,7 @@ public class Screen extends JPanel {
 
     private Visualizer visualizer;
     private Help help;
-    private JButton[] optionButton = new JButton[4];
+    private JButton[] optionButton = new JButton[5];
     private JButton enterButton, uploadButton;
     private JTextField input;
     private JSlider speed;
@@ -55,13 +55,13 @@ public class Screen extends JPanel {
         int BUTTON_HEIGHT = 20;
 
         JPanel option = new JPanel();
-        option.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 5));
+        option.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 5));
         option.setPreferredSize(new Dimension(SCREEN_WIDTH, OPTION_HEIGHT));
         option.setBackground(Color.WHITE);
         option.setDoubleBuffered(true);
 
-        String[] buttonLabels = { "Generate", "Selection Sort", "Merge Sort", "Shell Sort" };
-        for (int i = 0; i < 4; i++) {
+        String[] buttonLabels = { "Generate", "Selection Sort", "Merge Sort", "Shell Sort", "Quick Sort"};
+        for (int i = 0; i < 5; i++) {
             JButton button = new JButton(buttonLabels[i]);
             button.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
             button.setBackground(Color.WHITE);
@@ -154,7 +154,7 @@ public class Screen extends JPanel {
     }
 
     public void switchAll(boolean mode) {
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 5; i++) {
             optionButton[i].setEnabled(mode);
         }
         enterButton.setEnabled(mode);
@@ -193,6 +193,14 @@ public class Screen extends JPanel {
                     switchAll(false);
                     visualizer.animateSorting(new ShellSort());
                     currentSorting = "Shell Sort";
+                    if (help != null) {
+                        hideManual();
+                        showManual();
+                    }
+                } else if (button.getText().equals("Quick Sort")) {
+                    switchAll(false);
+                    visualizer.animateSorting(null);
+                    currentSorting = "Quick Sort";
                     if (help != null) {
                         hideManual();
                         showManual();
