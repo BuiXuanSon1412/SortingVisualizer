@@ -1,16 +1,17 @@
 ## General info
-APPLICATION: SORTING VISUALIZER for: SELECTION SORT, MERGE SORT, SHELL SORT. 
+Java Application for Sorting Visualization: Selection Sort, Merge Sort, Shell Sort, Quick Sort
 
-BY GROUP 3: Bùi Xuân Sơn
-            Phạm Thành Nam
-            Vũ Đức Mạnh
-            Luân Quang Minh
+BY GROUP 3: 
+1. Bùi Xuân Sơn
+2. Phạm Thành Nam
+3. Vũ Đức Mạnh
+4. Luân Quang Minh
 
 
 ## Installation
 * Programming language: Java 
 * Graphics libraries: javax.swing, java.awt
-- Note: using the latest version of Java for proper deployment 
+    - Note: using the latest version of Java for proper deployment 
 
 ## Documents
 * report for application in 'docs' folder
