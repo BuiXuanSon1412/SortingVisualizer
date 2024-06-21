@@ -30,7 +30,7 @@ import java.io.IOException;
 import java.awt.event.ActionEvent;
 
 public class Screen extends JPanel {
-    private final int SCREEN_WIDTH = 750;
+    private final int SCREEN_WIDTH = 1000; // Increased width to accommodate chat box
     private final int SCREEN_HEIGHT = 530;
     private String currentSorting;
 
@@ -41,6 +41,7 @@ public class Screen extends JPanel {
     private JButton enterButton, uploadButton;
     private JTextField input;
     private JSlider speed;
+    private JMenuItem chatMenuItem; // Reference to the ChatWithBots menu item
 
     private EventHandler eventHandler = new EventHandler();
 
@@ -62,7 +63,7 @@ public class Screen extends JPanel {
         option.setBackground(Color.WHITE);
         option.setDoubleBuffered(true);
 
-        String[] buttonLabels = { "Generate", "Selection Sort", "Merge Sort", "Shell Sort", "Quick Sort"};
+        String[] buttonLabels = { "Generate", "Selection Sort", "Merge Sort", "Shell Sort", "Quick Sort" };
         for (int i = 0; i < 5; i++) {
             JButton button = new JButton(buttonLabels[i]);
             button.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
@@ -96,6 +97,7 @@ public class Screen extends JPanel {
             item[i].addActionListener(eventHandler);
             menu.add(item[i]);
         }
+        chatMenuItem = item[1]; // Assign ChatWithBots menu item to reference
         menuBar.add(menu);
         header.add(menuBar);
 
@@ -134,10 +136,15 @@ public class Screen extends JPanel {
         });
 
         header.add(speed);
-
         header.add(fps);
-
         this.add(header, BorderLayout.NORTH);
+
+        /* chatbox panel */
+        chatWithBots = new ChatWithBots();
+        chatWithBots.setPreferredSize(new Dimension(250, SCREEN_HEIGHT));
+        chatWithBots.setBackground(Color.WHITE);
+        chatWithBots.setVisible(false);
+        this.add(chatWithBots, BorderLayout.WEST);
     }
 
     private void showManual() {
@@ -155,21 +162,6 @@ public class Screen extends JPanel {
         help = null;
     }
 
-    private void showChat() {
-        chatWithBots = new ChatWithBots();
-        visualizer.setPreferredSize(new Dimension(visualizer.getWidth() - 201, visualizer.getHeight()));
-        this.add(chatWithBots, BorderLayout.EAST);
-        this.revalidate();
-        this.repaint();
-    }
-
-    private void hideChat() {
-        this.remove(chatWithBots);
-        this.revalidate();
-        this.repaint();
-        chatWithBots = null;
-    }
-
     public void switchAll(boolean mode) {
         for (int i = 0; i < 5; i++) {
             optionButton[i].setEnabled(mode);
@@ -182,6 +174,13 @@ public class Screen extends JPanel {
         optionButton[0].setEnabled(true);
         enterButton.setEnabled(true);
         uploadButton.setEnabled(true);
+    }
+
+    private void toggleChat() {
+        chatWithBots.setVisible(!chatWithBots.isVisible());
+        chatMenuItem.setText(chatWithBots.isVisible() ? "Hide ChatWithBots" : "ChatWithBots"); // Update menu item text
+        this.revalidate();
+        this.repaint();
     }
 
     private class EventHandler implements ActionListener {
@@ -255,12 +254,8 @@ public class Screen extends JPanel {
                 } else if (item.getText().equals("Hide help")) {
                     hideManual();
                     item.setText("Help");
-                } else if (item.getText().equals("ChatWithBots")) {
-                    showChat();
-                    item.setText("Hide ChatWithBots");
-                } else if (item.getText().equals("Hide ChatWithBots")) {
-                    hideChat();
-                    item.setText("ChatWithBots");
+                } else if (item == chatMenuItem) { // Check specifically for chatMenuItem
+                    toggleChat();
                 } else if (item.getText().equals("Exit")) {
                     int result = JOptionPane.showConfirmDialog(Screen.this.getParent(),
                             "Are you sure you want to exit?", "Confirm Exit",

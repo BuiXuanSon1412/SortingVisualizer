@@ -62,7 +62,7 @@ public class ChatWithBots extends JPanel {
     }
 
     private String getChatGPTResponse(String input) {
-        String apiKey = "YOUR_API_KEY"; // Replace with your API key
+        String apiKey = "###"; // Replace with your API key
         String endpoint = "https://api.openai.com/v1/engines/davinci-codex/completions";
 
         try {
