@@ -7,7 +7,7 @@ import views.Visualizer;
 public class MergeSort extends SortAbstraction {
 
     private final Color MERGE_COLOR = new Color(0x6B8A7A); // Color for merging segments
-    private final Color ACTIVE_COLOR = new Color(0xB7B597); // Color for active elements
+    private final Color ACTIVE_COLOR = new Color(0x074173); // Color for active elements
     private final Color FINAL_COLOR = new Color(0xDAD3BE); // Color for sorted elements
 
     public void sort(Visualizer visualizer) {

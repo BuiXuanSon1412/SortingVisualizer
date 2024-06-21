@@ -9,8 +9,8 @@ public class QuickSort extends SortAbstraction {
     private boolean[] sorted;
 
     // Define colors for QuickSort visualization
-    private final Color ACTIVE_COLOR = new Color(0xB7B597); // Color for active elements
-    private final Color PIVOT_COLOR = new Color(0xDAD3BE); // Color for pivot elements
+    private final Color ACTIVE_COLOR = new Color(0x074173); // Color for active elements
+    private final Color PIVOT_COLOR = new Color(0x074173); // Color for pivot elements
     private final Color FINAL_COLOR = new Color(0xDAD3BE); // Color for sorted elements
 
     public void sort(Visualizer visualizer) {

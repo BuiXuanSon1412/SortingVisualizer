@@ -9,10 +9,10 @@ import utils.ArrayGenerator;
 import algorithms.SortAbstraction;
 
 public class Visualizer extends Canvas {
-    private final Color VISUALIZER_BACKGROUND_COLOR = new Color(0x254336);
+    private final Color VISUALIZER_BACKGROUND_COLOR = new Color(0x6B8A7A);
     private final Color BAR_COLOR = new Color(0xDAD3BE); // Lighter color for better visibility
     private final Color HIGHLIGHT_COLOR = new Color(0xB7B597); // Highlight color for active elements
-    private final Color BOUNDARY_COLOR = new Color(0x6B8A7A); // Color for boundaries during merge
+    private final Color BOUNDARY_COLOR = new Color(0xF9EFDB); // Color for boundaries during merge
     private final Color WARNING_COLOR = Color.RED;
     private final Color TEXT_COLOR = Color.WHITE;
     private final Color FINAL_COLOR = new Color(0xDAD3BE); // Color for final sorted elements
