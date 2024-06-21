@@ -6,10 +6,14 @@ import views.Visualizer;
 
 public class MergeSort extends SortAbstraction {
 
+    private final Color MERGE_COLOR = new Color(0x6B8A7A); // Color for merging segments
+    private final Color ACTIVE_COLOR = new Color(0xB7B597); // Color for active elements
+    private final Color FINAL_COLOR = new Color(0xDAD3BE); // Color for sorted elements
+
     public void sort(Visualizer visualizer) {
         int[] array = visualizer.getArray();
         mergeSort(array, 0, array.length - 1, visualizer);
-        visualizer.drawAll(visualizer.getArray(), Color.WHITE);
+        visualizer.drawAll(array, FINAL_COLOR);
         visualizer.updateAnimation();
     }
 
@@ -33,24 +37,24 @@ public class MergeSort extends SortAbstraction {
 
         while (i <= mid && j <= right) {
             if (temp[i] <= temp[j]) {
-                visualizer.moveFrom(i, j, k, left, right, temp);
+                visualizer.moveFrom(i, j, k, left, right, temp, ACTIVE_COLOR, MERGE_COLOR);
                 i++;
-
             } else {
-                visualizer.moveFrom(j, i, k, left, right, temp);
+                visualizer.moveFrom(j, i, k, left, right, temp, ACTIVE_COLOR, MERGE_COLOR);
                 j++;
             }
             k++;
         }
         while (i <= mid) {
-            visualizer.moveFrom(i, j, k, left, right, temp);
+            visualizer.moveFrom(i, j, k, left, right, temp, ACTIVE_COLOR, MERGE_COLOR);
             k++;
             i++;
         }
         while (j <= right) {
-            visualizer.moveFrom(j, i, k, left, right, temp);
+            visualizer.moveFrom(j, i, k, left, right, temp, ACTIVE_COLOR, MERGE_COLOR);
             k++;
             j++;
         }
+        visualizer.drawAll(array, FINAL_COLOR); // Mark the merged segment as sorted
     }
 }

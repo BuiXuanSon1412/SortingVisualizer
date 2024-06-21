@@ -26,7 +26,7 @@ public class ArrayGenerator {
             }
         }
         if (isEmpty) {
-            int[] err = {0};
+            int[] err = { 0 };
             return err;
         }
         int num = 1;
@@ -35,12 +35,12 @@ public class ArrayGenerator {
             if (c == ' ') {
                 ++num;
             } else if (c > '9' || c < '0') {
-                int[] err = {-1}; // Syntax error
+                int[] err = { -1 }; // Syntax error
                 return err;
             }
         }
         if (num > MAX_LEN) {
-            int[] err = {-2}; // exceeding length
+            int[] err = { -2 }; // exceeding length
             return err;
         }
         int[] array = new int[num];
@@ -52,7 +52,7 @@ public class ArrayGenerator {
                 n = 10 * n + (c - '0');
             } else if (n != 0) {
                 if (n > MAX) {
-                    int[] err= {-3};
+                    int[] err = { -3 };
                     return err;
                 }
                 array[idx++] = n;
@@ -61,7 +61,7 @@ public class ArrayGenerator {
         }
         if (n != 0) {
             if (n > MAX) {
-                int[] err= {-3};
+                int[] err = { -3 };
                 return err;
             }
             array[idx] = n;

@@ -1,9 +1,18 @@
 package algorithms;
 
+import java.awt.Color;
+
 import views.Visualizer;
 
 public class QuickSort extends SortAbstraction {
+
     private boolean[] sorted;
+
+    // Define colors for QuickSort visualization
+    private final Color ACTIVE_COLOR = new Color(0xB7B597); // Color for active elements
+    private final Color PIVOT_COLOR = new Color(0xDAD3BE); // Color for pivot elements
+    private final Color FINAL_COLOR = new Color(0xDAD3BE); // Color for sorted elements
+
     public void sort(Visualizer visualizer) {
         int[] array = visualizer.getArray();
         sorted = new boolean[array.length];
@@ -11,6 +20,8 @@ public class QuickSort extends SortAbstraction {
             sorted[i] = false;
         }
         quickSort(array, 0, array.length - 1, visualizer);
+        visualizer.drawAll(array, FINAL_COLOR); // Mark the entire array as sorted
+        visualizer.updateAnimation();
     }
 
     private int partition(int[] arr, int low, int high, Visualizer visualizer) {
@@ -20,11 +31,11 @@ public class QuickSort extends SortAbstraction {
         for (int j = low; j <= high - 1; j++) {
             if (arr[j] < pivot) {
                 i++;
-                visualizer.swap(i, j, false, sorted, high);
+                visualizer.swap(i, j, false, sorted, high, ACTIVE_COLOR, PIVOT_COLOR);
             }
         }
-        visualizer.swap(i + 1, high, false, sorted, high);
-        sorted[i+1] = true;
+        visualizer.swap(i + 1, high, false, sorted, high, ACTIVE_COLOR, PIVOT_COLOR);
+        sorted[i + 1] = true;
         return (i + 1);
     }
 

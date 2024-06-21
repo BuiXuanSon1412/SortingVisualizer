@@ -9,7 +9,13 @@ import utils.ArrayGenerator;
 import algorithms.SortAbstraction;
 
 public class Visualizer extends Canvas {
-    private final Color VISUALIZER_BACKGROUND_COLOR = Color.BLACK;
+    private final Color VISUALIZER_BACKGROUND_COLOR = new Color(0x254336);
+    private final Color BAR_COLOR = new Color(0xDAD3BE); // Lighter color for better visibility
+    private final Color HIGHLIGHT_COLOR = new Color(0xB7B597); // Highlight color for active elements
+    private final Color BOUNDARY_COLOR = new Color(0x6B8A7A); // Color for boundaries during merge
+    private final Color WARNING_COLOR = Color.RED;
+    private final Color TEXT_COLOR = Color.WHITE;
+    private final Color FINAL_COLOR = new Color(0xDAD3BE); // Color for final sorted elements
 
     private final int BOUND = 101;
     private final int TILE_Y = 2;
@@ -41,7 +47,7 @@ public class Visualizer extends Canvas {
 
     public void paint(Graphics g) {
         super.paint(g);
-        g.setColor(Color.WHITE);
+        g.setColor(BAR_COLOR);
 
         baseY = this.getHeight() / 2 + BOUND * TILE_Y;
         paddingX = (this.getWidth() - array.length * SPACE) / 2;
@@ -58,17 +64,17 @@ public class Visualizer extends Canvas {
             TILE_X = 4;
             SPACE = 5;
         } else if (len > 60) {
-            TILE_X = 5;
-            SPACE = 6;
+            TILE_X = 6;
+            SPACE = 7;
         } else if (len > 40) {
-            TILE_X = 7;
-            SPACE = 8;
+            TILE_X = 8;
+            SPACE = 9;
         } else if (len > 20) {
-            TILE_X = 9;
-            SPACE = 10;
+            TILE_X = 10;
+            SPACE = 11;
         } else {
-            TILE_X = 11;
-            SPACE = 12;
+            TILE_X = 12;
+            SPACE = 13;
         }
     }
 
@@ -96,7 +102,7 @@ public class Visualizer extends Canvas {
         baseY = this.getHeight() / 2 + BOUND * TILE_Y;
         paddingX = (this.getWidth() - array.length * SPACE) / 2;
 
-        drawAll(array, Color.WHITE);
+        drawAll(array, BAR_COLOR);
         updateAnimation();
     }
 
@@ -117,18 +123,17 @@ public class Visualizer extends Canvas {
             baseY = this.getHeight() / 2 + BOUND * TILE_Y;
             paddingX = (this.getWidth() - array.length * SPACE) / 2;
 
-            drawAll(array, Color.WHITE);
+            drawAll(array, BAR_COLOR);
             updateAnimation();
         }
-
     }
 
     public void drawWarning(String error) {
         g = bs.getDrawGraphics();
         int width = this.getWidth() / 4;
-        g.setColor(Color.WHITE);
+        g.setColor(TEXT_COLOR);
         g.fillRect(3 * this.getWidth() / 8, 10, width, 20);
-        g.setColor(Color.RED);
+        g.setColor(WARNING_COLOR);
         g.drawString(error, 3 * this.getWidth() / 8 + 22, 25);
         updateAnimation();
     }
@@ -144,19 +149,18 @@ public class Visualizer extends Canvas {
     }
 
     public void swap(int i, int j, boolean boundary, boolean[] sorted, int pivot) {
-
         int xi = paddingX + SPACE * i;
         int xj = paddingX + SPACE * j;
         int d = xi - xj;
 
         while (true) {
-            drawAll(array, Color.WHITE);
+            drawAll(array, BAR_COLOR);
             if (boundary)
                 drawBoundary(i, j);
             if (sorted != null) {
-                g.setColor(Color.YELLOW);
+                g.setColor(HIGHLIGHT_COLOR);
                 g.fillRect(SPACE * pivot + paddingX, baseY - TILE_Y * array[pivot], TILE_X, TILE_Y * array[pivot]);
-                g.setColor(Color.CYAN);
+                g.setColor(BOUNDARY_COLOR);
                 for (int k = 0; k < array.length; k++) {
                     if (sorted[k]) {
                         int iX = SPACE * k + paddingX;
@@ -178,7 +182,45 @@ public class Visualizer extends Canvas {
         int tmp = array[i];
         array[i] = array[j];
         array[j] = tmp;
-        drawAll(array, Color.WHITE);
+        drawAll(array, BAR_COLOR);
+        updateAnimation();
+    }
+
+    public void swap(int i, int j, boolean boundary, boolean[] sorted, int pivot, Color activeColor, Color gapColor) {
+        int xi = paddingX + SPACE * i;
+        int xj = paddingX + SPACE * j;
+        int d = xi - xj;
+
+        while (true) {
+            drawAll(array, BAR_COLOR);
+            if (boundary)
+                drawBoundary(i, j);
+            if (sorted != null) {
+                g.setColor(gapColor);
+                g.fillRect(SPACE * pivot + paddingX, baseY - TILE_Y * array[pivot], TILE_X, TILE_Y * array[pivot]);
+                g.setColor(FINAL_COLOR);
+                for (int k = 0; k < array.length; k++) {
+                    if (sorted[k]) {
+                        int iX = SPACE * k + paddingX;
+                        g.fillRect(iX, baseY - TILE_Y * array[k], TILE_X, TILE_Y * array[k]);
+                    }
+                }
+            }
+            setColor(i, Color.DARK_GRAY);
+            setColor(j, Color.DARK_GRAY);
+            drawUnit(i, xi, activeColor);
+            drawUnit(j, xj, activeColor);
+            if (xi - xj == -d)
+                break;
+            ++xi;
+            --xj;
+            updateAnimation();
+        }
+
+        int tmp = array[i];
+        array[i] = array[j];
+        array[j] = tmp;
+        drawAll(array, BAR_COLOR);
         updateAnimation();
     }
 
@@ -205,7 +247,7 @@ public class Visualizer extends Canvas {
         g.fillRect(paddingX + i * SPACE, baseY - TILE_Y * array[i], TILE_X, TILE_Y * array[i]);
     }
 
-    public void moveFrom(int i, int j, int k, int left, int right, int[] temp) {
+    public void moveFrom(int i, int j, int k, int left, int right, int[] temp, Color activeColor, Color mergeColor) {
         int dx = (k - i) * SPACE;
         int dy = BOUND * TILE_Y;
         double d = Math.sqrt((double) dx * dx + dy * dy);
@@ -221,12 +263,12 @@ public class Visualizer extends Canvas {
             drawAll(temp, Color.DARK_GRAY);
             // draw boundary lines
             drawBoundary(left, right);
-            g.setColor(Color.RED);
+            g.setColor(mergeColor);
             g.drawLine(paddingX + mid * SPACE + TILE_X, baseY, paddingX + mid * SPACE + TILE_X,
                     baseY - BOUND * TILE_Y);
 
             // draw merging partition
-            drawSegment(left, right, temp, Color.WHITE);
+            drawSegment(left, right, temp, BAR_COLOR);
             if (i <= mid) {
                 drawSegment(left, i - 1, temp, Color.DARK_GRAY);
                 drawSegment((left + right) / 2 + 1, j - 1, temp, Color.DARK_GRAY);
@@ -234,9 +276,9 @@ public class Visualizer extends Canvas {
                 drawSegment(left, j - 1, temp, Color.DARK_GRAY);
                 drawSegment((left + right) / 2 + 1, i - 1, temp, Color.DARK_GRAY);
             }
-            drawTempSegment(left, k - 1, Color.BLUE);
+            drawTempSegment(left, k - 1, activeColor);
             // draw movement
-            g.setColor(Color.BLUE);
+            g.setColor(activeColor);
             g.fillRect((int) (paddingX + i * SPACE + x), (int) (baseY - TILE_Y * temp[i] - y), TILE_X,
                     TILE_Y * temp[i]);
             updateAnimation();
@@ -251,7 +293,7 @@ public class Visualizer extends Canvas {
     }
 
     public void drawBoundary(int left, int right) {
-        g.setColor(Color.YELLOW);
+        g.setColor(BOUNDARY_COLOR);
         g.drawLine(paddingX + left * SPACE - 1, baseY, paddingX + left * SPACE - 1, baseY - 2 * BOUND * TILE_Y);
         g.drawLine(paddingX + right * SPACE + TILE_X, baseY, paddingX + right * SPACE + TILE_X,
                 baseY - 2 * BOUND * TILE_Y);

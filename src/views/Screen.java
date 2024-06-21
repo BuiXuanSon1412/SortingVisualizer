@@ -43,13 +43,20 @@ public class Screen extends JPanel {
 
     private EventHandler eventHandler = new EventHandler();
 
+    // Color scheme
+    private final Color primaryColor = new Color(0x254336);
+    private final Color secondaryColor = new Color(0x6B8A7A);
+    private final Color accentColor = new Color(0xB7B597);
+    private final Color backgroundColor = new Color(0xDAD3BE);
+    private final Color textColor = Color.WHITE;
+
     // Constructor to arrange components on screen: visualizer, button, ...
     public Screen() {
         /* general settings */
         this.setDoubleBuffered(true);
         this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
         this.setLayout(new BorderLayout());
-        this.setBackground(Color.WHITE);
+        this.setBackground(backgroundColor);
         /* option panel */
         int OPTION_HEIGHT = 30;
         int BUTTON_WIDTH = 135;
@@ -58,14 +65,15 @@ public class Screen extends JPanel {
         JPanel option = new JPanel();
         option.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 5));
         option.setPreferredSize(new Dimension(SCREEN_WIDTH, OPTION_HEIGHT));
-        option.setBackground(Color.WHITE);
+        option.setBackground(primaryColor);
         option.setDoubleBuffered(true);
 
-        String[] buttonLabels = { "Generate", "Selection Sort", "Merge Sort", "Shell Sort", "Quick Sort"};
+        String[] buttonLabels = { "Generate", "Selection Sort", "Merge Sort", "Shell Sort", "Quick Sort" };
         for (int i = 0; i < 5; i++) {
             JButton button = new JButton(buttonLabels[i]);
             button.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
-            button.setBackground(Color.WHITE);
+            button.setBackground(secondaryColor);
+            button.setForeground(textColor);
             button.addActionListener(eventHandler);
             optionButton[i] = button;
             option.add(optionButton[i]);
@@ -74,24 +82,27 @@ public class Screen extends JPanel {
 
         /* visualizer panel */
         visualizer = new Visualizer();
+        visualizer.setBackground(backgroundColor);
         this.add(visualizer, BorderLayout.CENTER);
 
         /* header panel */
         JPanel header = new JPanel();
         header.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 5));
         header.setPreferredSize(new Dimension(SCREEN_WIDTH, OPTION_HEIGHT));
-        header.setBackground(Color.WHITE);
+        header.setBackground(primaryColor);
         header.setDoubleBuffered(true);
 
         JMenuBar menuBar = new JMenuBar();
-        menuBar.setBackground(Color.WHITE);
+        menuBar.setBackground(primaryColor);
         JMenu menu = new JMenu("Options");
-        menu.setBackground(Color.WHITE);
+        menu.setForeground(textColor);
+        menu.setBackground(primaryColor);
         JMenuItem[] item = new JMenuItem[2];
         String[] items = { "Help", "Exit" };
         for (int i = 0; i < 2; i++) {
             item[i] = new JMenuItem(items[i]);
-            item[i].setBackground(Color.WHITE);
+            item[i].setForeground(textColor);
+            item[i].setBackground(secondaryColor);
             item[i].addActionListener(eventHandler);
             menu.add(item[i]);
         }
@@ -100,29 +111,35 @@ public class Screen extends JPanel {
 
         input = new JTextField();
         input.setPreferredSize(new Dimension(3 * BUTTON_WIDTH / 2, BUTTON_HEIGHT + 1));
+        input.setBackground(backgroundColor);
+        input.setForeground(primaryColor);
         header.add(input);
 
         enterButton = new JButton("Enter");
         enterButton.setPreferredSize(new Dimension((int) (BUTTON_WIDTH / 1.4), BUTTON_HEIGHT));
-        enterButton.setBackground(Color.WHITE);
+        enterButton.setBackground(secondaryColor);
+        enterButton.setForeground(textColor);
         enterButton.addActionListener(eventHandler);
         header.add(enterButton);
 
         uploadButton = new JButton("Upload");
         uploadButton.setPreferredSize(new Dimension((int) (BUTTON_WIDTH / 1.4), BUTTON_HEIGHT));
-        uploadButton.setBackground(Color.WHITE);
+        uploadButton.setBackground(secondaryColor);
+        uploadButton.setForeground(textColor);
         uploadButton.addActionListener(eventHandler);
         header.add(uploadButton);
 
         JTextField fps = new JTextField("150fps");
         fps.setPreferredSize(new Dimension(55, BUTTON_HEIGHT + 1));
-        fps.setBackground(Color.WHITE);
+        fps.setBackground(backgroundColor);
+        fps.setForeground(primaryColor);
         fps.setEditable(false);
         visualizer.setSpeed(150);
 
         speed = new JSlider(JSlider.HORIZONTAL, 1, 1000, 150);
         speed.setPreferredSize(new Dimension((int) (BUTTON_WIDTH / 1.4), BUTTON_HEIGHT));
-        speed.setBackground(Color.WHITE);
+        speed.setBackground(accentColor);
+        speed.setForeground(primaryColor);
         speed.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
@@ -161,11 +178,13 @@ public class Screen extends JPanel {
         enterButton.setEnabled(mode);
         uploadButton.setEnabled(mode);
     }
+
     public void enableGenerate() {
         optionButton[0].setEnabled(true);
         enterButton.setEnabled(true);
         uploadButton.setEnabled(true);
     }
+
     private class EventHandler implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             Object source = e.getSource();
