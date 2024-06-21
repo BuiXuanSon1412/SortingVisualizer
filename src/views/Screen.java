@@ -36,6 +36,7 @@ public class Screen extends JPanel {
 
     private Visualizer visualizer;
     private Help help;
+    private ChatWithBots chatWithBots;
     private JButton[] optionButton = new JButton[5];
     private JButton enterButton, uploadButton;
     private JTextField input;
@@ -87,9 +88,9 @@ public class Screen extends JPanel {
         menuBar.setBackground(Color.WHITE);
         JMenu menu = new JMenu("Options");
         menu.setBackground(Color.WHITE);
-        JMenuItem[] item = new JMenuItem[2];
-        String[] items = { "Help", "Exit" };
-        for (int i = 0; i < 2; i++) {
+        JMenuItem[] item = new JMenuItem[3]; // Increased size for new item
+        String[] items = { "Help", "ChatWithBots", "Exit" };
+        for (int i = 0; i < 3; i++) { // Updated loop to include new item
             item[i] = new JMenuItem(items[i]);
             item[i].setBackground(Color.WHITE);
             item[i].addActionListener(eventHandler);
@@ -154,6 +155,21 @@ public class Screen extends JPanel {
         help = null;
     }
 
+    private void showChat() {
+        chatWithBots = new ChatWithBots();
+        visualizer.setPreferredSize(new Dimension(visualizer.getWidth() - 201, visualizer.getHeight()));
+        this.add(chatWithBots, BorderLayout.EAST);
+        this.revalidate();
+        this.repaint();
+    }
+
+    private void hideChat() {
+        this.remove(chatWithBots);
+        this.revalidate();
+        this.repaint();
+        chatWithBots = null;
+    }
+
     public void switchAll(boolean mode) {
         for (int i = 0; i < 5; i++) {
             optionButton[i].setEnabled(mode);
@@ -161,11 +177,13 @@ public class Screen extends JPanel {
         enterButton.setEnabled(mode);
         uploadButton.setEnabled(mode);
     }
+
     public void enableGenerate() {
         optionButton[0].setEnabled(true);
         enterButton.setEnabled(true);
         uploadButton.setEnabled(true);
     }
+
     private class EventHandler implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             Object source = e.getSource();
@@ -237,6 +255,12 @@ public class Screen extends JPanel {
                 } else if (item.getText().equals("Hide help")) {
                     hideManual();
                     item.setText("Help");
+                } else if (item.getText().equals("ChatWithBots")) {
+                    showChat();
+                    item.setText("Hide ChatWithBots");
+                } else if (item.getText().equals("Hide ChatWithBots")) {
+                    hideChat();
+                    item.setText("ChatWithBots");
                 } else if (item.getText().equals("Exit")) {
                     int result = JOptionPane.showConfirmDialog(Screen.this.getParent(),
                             "Are you sure you want to exit?", "Confirm Exit",
