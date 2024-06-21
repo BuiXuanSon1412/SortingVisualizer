@@ -4,11 +4,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
 public class ChatWithBots extends JPanel {
 
@@ -21,6 +20,8 @@ public class ChatWithBots extends JPanel {
 
         chatArea = new JTextArea();
         chatArea.setEditable(false);
+        chatArea.setLineWrap(true); // Thêm dòng này để tự động xuống dòng
+        chatArea.setWrapStyleWord(true); // Thêm dòng này để tự động xuống dòng theo từ
         JScrollPane scrollPane = new JScrollPane(chatArea);
 
         inputField = new JTextField(30);
@@ -55,39 +56,46 @@ public class ChatWithBots extends JPanel {
             chatArea.append("You: " + userInput + "\n");
             inputField.setText("");
 
-            // Call the ChatGPT API to get a response
-            String response = getChatGPTResponse(userInput);
-            chatArea.append("Bot: " + response + "\n");
+            // Check if the question is related to sorting
+            if (isSortingQuestion(userInput)) {
+                // Call the ChatGPT API to get a response
+                String response = getChatGPTResponse(userInput);
+                chatArea.append("Bot: " + response + "\n");
+            } else {
+                chatArea.append("Bot: I can only answer questions related to sorting algorithms.\n");
+            }
         }
     }
 
+    private boolean isSortingQuestion(String question) {
+        String[] sortingKeywords = { "sort", "sorting", "bubble sort", "quick sort", "merge sort", "selection sort",
+                "insertion sort" };
+        for (String keyword : sortingKeywords) {
+            if (question.toLowerCase().contains(keyword)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private String getChatGPTResponse(String input) {
-        String apiKey = "###"; // Replace with your API key
-        String endpoint = "https://api.openai.com/v1/engines/davinci-codex/completions";
+        String apiKey = "xxx";
+        String endpoint = "https://chatgpt-api8.p.rapidapi.com/";
+        HttpClient client = HttpClient.newHttpClient();
+
+        String requestBody = "[{\"content\":\"Hello! I'm an AI assistant bot based on ChatGPT 3. How may I help you?\",\"role\":\"system\"},{\"content\":\""
+                + input + "\",\"role\":\"user\"}]";
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(endpoint))
+                .header("x-rapidapi-key", apiKey)
+                .header("x-rapidapi-host", "chatgpt-api8.p.rapidapi.com")
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                .build();
 
         try {
-            URL url = new URL(endpoint);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type", "application/json");
-            connection.setRequestProperty("Authorization", "Bearer " + apiKey);
-            connection.setDoOutput(true);
-
-            String requestBody = "{\"prompt\":\"" + input + "\",\"max_tokens\":100}";
-            try (OutputStream os = connection.getOutputStream()) {
-                byte[] inputBytes = requestBody.getBytes("utf-8");
-                os.write(inputBytes, 0, inputBytes.length);
-            }
-
-            try (BufferedReader br = new BufferedReader(
-                    new InputStreamReader(connection.getInputStream(), "utf-8"))) {
-                StringBuilder response = new StringBuilder();
-                String responseLine;
-                while ((responseLine = br.readLine()) != null) {
-                    response.append(responseLine.trim());
-                }
-                return parseChatGPTResponse(response.toString());
-            }
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            return parseChatGPTResponse(response.body());
         } catch (Exception e) {
             e.printStackTrace();
             return "Failed to get response from ChatGPT.";
@@ -96,8 +104,16 @@ public class ChatWithBots extends JPanel {
 
     private String parseChatGPTResponse(String jsonResponse) {
         // Simple parsing logic to extract the response text
-        int startIndex = jsonResponse.indexOf("\"text\": \"") + 9;
+        int startIndex = jsonResponse.indexOf("\"content\":\"") + 11;
         int endIndex = jsonResponse.indexOf("\"", startIndex);
         return jsonResponse.substring(startIndex, endIndex).replace("\\n", "\n").replace("\\\"", "\"");
+    }
+
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("Chat with Bots");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(500, 400);
+        frame.add(new ChatWithBots());
+        frame.setVisible(true);
     }
 }
