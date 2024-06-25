@@ -36,7 +36,7 @@ public class Screen extends JPanel {
 
     private Visualizer visualizer;
     private Help help;
-    private ChatWithBots chatWithBots;
+    private ChatBot chatBot;
     private JButton[] optionButton = new JButton[5];
     private JButton enterButton, uploadButton;
     private JTextField input;
@@ -90,7 +90,7 @@ public class Screen extends JPanel {
         JMenu menu = new JMenu("Options");
         menu.setBackground(Color.WHITE);
         JMenuItem[] item = new JMenuItem[3]; // Increased size for new item
-        String[] items = { "Help", "ChatWithBots", "Exit" };
+        String[] items = { "Help", "ChatBot", "Exit" };
         for (int i = 0; i < 3; i++) { // Updated loop to include new item
             item[i] = new JMenuItem(items[i]);
             item[i].setBackground(Color.WHITE);
@@ -140,11 +140,11 @@ public class Screen extends JPanel {
         this.add(header, BorderLayout.NORTH);
 
         /* chatbox panel */
-        chatWithBots = new ChatWithBots();
-        chatWithBots.setPreferredSize(new Dimension(250, SCREEN_HEIGHT));
-        chatWithBots.setBackground(Color.WHITE);
-        chatWithBots.setVisible(false);
-        this.add(chatWithBots, BorderLayout.WEST);
+        chatBot = new ChatBot();
+        chatBot.setPreferredSize(new Dimension(250, SCREEN_HEIGHT));
+        chatBot.setBackground(Color.WHITE);
+        chatBot.setVisible(false);
+        this.add(chatBot, BorderLayout.WEST);
     }
 
     private void showManual() {
@@ -177,8 +177,8 @@ public class Screen extends JPanel {
     }
 
     private void toggleChat() {
-        chatWithBots.setVisible(!chatWithBots.isVisible());
-        chatMenuItem.setText(chatWithBots.isVisible() ? "Hide ChatWithBots" : "ChatWithBots"); // Update menu item text
+        chatBot.setVisible(!chatBot.isVisible());
+        chatMenuItem.setText(chatBot.isVisible() ? "Hide ChatBot" : "ChatBot"); // Update menu item text
         this.revalidate();
         this.repaint();
     }

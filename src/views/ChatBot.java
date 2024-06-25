@@ -9,13 +9,13 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-public class ChatWithBots extends JPanel {
+public class ChatBot extends JPanel {
 
     private JTextArea chatArea;
     private JTextField inputField;
     private JButton sendButton;
 
-    public ChatWithBots() {
+    public ChatBot() {
         setLayout(new BorderLayout());
 
         chatArea = new JTextArea();
@@ -107,13 +107,5 @@ public class ChatWithBots extends JPanel {
         int startIndex = jsonResponse.indexOf("\"content\":\"") + 11;
         int endIndex = jsonResponse.indexOf("\"", startIndex);
         return jsonResponse.substring(startIndex, endIndex).replace("\\n", "\n").replace("\\\"", "\"");
-    }
-
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Chat with Bots");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(500, 400);
-        frame.add(new ChatWithBots());
-        frame.setVisible(true);
     }
 }
